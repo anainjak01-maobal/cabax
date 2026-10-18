@@ -1,0 +1,595 @@
+/* Datos de demostración (ciclo del 31 ago al 20 sep 2026). Son datos de ejemplo. */
+window.CABAX_DEMO = {
+ "inventario": [
+  {
+   "codigo": "P-VN",
+   "prenda": "Vestido negro línea dorada",
+   "categoria": "Vestidos",
+   "talla": "S",
+   "stock": 3,
+   "precio": 89000,
+   "costo": 42000,
+   "calidad": "Crepé elástico con forro interior y línea dorada. Lavar a mano.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-VN",
+   "prenda": "Vestido negro línea dorada",
+   "categoria": "Vestidos",
+   "talla": "M",
+   "stock": 3,
+   "precio": 89000,
+   "costo": 42000,
+   "calidad": "Crepé elástico con forro interior y línea dorada. Lavar a mano.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-VN",
+   "prenda": "Vestido negro línea dorada",
+   "categoria": "Vestidos",
+   "talla": "L",
+   "stock": 2,
+   "precio": 89000,
+   "costo": 42000,
+   "calidad": "Crepé elástico con forro interior y línea dorada. Lavar a mano.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-VT",
+   "prenda": "Vestido midi terracota",
+   "categoria": "Vestidos",
+   "talla": "S",
+   "stock": 2,
+   "precio": 95000,
+   "costo": 45000,
+   "calidad": "Viscosa fluida, largo midi, cierre invisible. Lavar en frío.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-VT",
+   "prenda": "Vestido midi terracota",
+   "categoria": "Vestidos",
+   "talla": "M",
+   "stock": 2,
+   "precio": 95000,
+   "costo": 45000,
+   "calidad": "Viscosa fluida, largo midi, cierre invisible. Lavar en frío.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-BS",
+   "prenda": "Blusa satín champagne",
+   "categoria": "Blusas",
+   "talla": "S",
+   "stock": 4,
+   "precio": 45000,
+   "costo": 18000,
+   "calidad": "Satín liviano con cuello en V. Planchar a baja temperatura.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-BS",
+   "prenda": "Blusa satín champagne",
+   "categoria": "Blusas",
+   "talla": "M",
+   "stock": 3,
+   "precio": 45000,
+   "costo": 18000,
+   "calidad": "Satín liviano con cuello en V. Planchar a baja temperatura.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-BS",
+   "prenda": "Blusa satín champagne",
+   "categoria": "Blusas",
+   "talla": "L",
+   "stock": 0,
+   "precio": 45000,
+   "costo": 18000,
+   "calidad": "Satín liviano con cuello en V. Planchar a baja temperatura.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-CL",
+   "prenda": "Camisa lino blanco",
+   "categoria": "Camisas",
+   "talla": "M",
+   "stock": 3,
+   "precio": 52000,
+   "costo": 21000,
+   "calidad": "Lino con algodón, corte regular. Se arruga: es parte del estilo.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-CL",
+   "prenda": "Camisa lino blanco",
+   "categoria": "Camisas",
+   "talla": "L",
+   "stock": 2,
+   "precio": 52000,
+   "costo": 21000,
+   "calidad": "Lino con algodón, corte regular. Se arruga: es parte del estilo.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-BN",
+   "prenda": "Bolso estructurado negro",
+   "categoria": "Accesorios",
+   "talla": "Única",
+   "stock": 3,
+   "precio": 72000,
+   "costo": 30000,
+   "calidad": "Material sintético estructurado, forro interior y herraje dorado.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-AD",
+   "prenda": "Aretes dorados par",
+   "categoria": "Accesorios",
+   "talla": "Única",
+   "stock": 6,
+   "precio": 28000,
+   "costo": 8000,
+   "calidad": "Baño dorado, par. Evitar el contacto con agua y perfume.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-CI",
+   "prenda": "Cinturón hebilla dorada",
+   "categoria": "Accesorios",
+   "talla": "S",
+   "stock": 3,
+   "precio": 38000,
+   "costo": 12000,
+   "calidad": "Correa negra con hebilla dorada. Ajustable.",
+   "foto": ""
+  },
+  {
+   "codigo": "P-CI",
+   "prenda": "Cinturón hebilla dorada",
+   "categoria": "Accesorios",
+   "talla": "M",
+   "stock": 3,
+   "precio": 38000,
+   "costo": 12000,
+   "calidad": "Correa negra con hebilla dorada. Ajustable.",
+   "foto": ""
+  }
+ ],
+ "pedidos": [
+  {
+   "id": "V001",
+   "fecha": "2026-09-01",
+   "cliente": "C01",
+   "categoria": "Vestidos",
+   "prenda": "Vestido negro línea dorada",
+   "talla": "M",
+   "precio": 89000,
+   "canal": "Instagram",
+   "estado": "Entregado",
+   "registro": "Xairy"
+  },
+  {
+   "id": "V002",
+   "fecha": "2026-09-01",
+   "cliente": "C02",
+   "categoria": "Blusas",
+   "prenda": "Blusa satín champagne",
+   "talla": "S",
+   "precio": 45000,
+   "canal": "WhatsApp",
+   "estado": "Entregado",
+   "registro": "Angelly"
+  },
+  {
+   "id": "V003",
+   "fecha": "2026-09-02",
+   "cliente": "C03",
+   "categoria": "Accesorios",
+   "prenda": "Bolso estructurado negro",
+   "talla": "Única",
+   "precio": 72000,
+   "canal": "WhatsApp",
+   "estado": "Entregado",
+   "registro": "Claudia"
+  },
+  {
+   "id": "V004",
+   "fecha": "2026-09-02",
+   "cliente": "C04",
+   "categoria": "Camisas",
+   "prenda": "Camisa lino blanco",
+   "talla": "L",
+   "precio": 52000,
+   "canal": "Instagram",
+   "estado": "Entregado",
+   "registro": "Xairy"
+  },
+  {
+   "id": "V005",
+   "fecha": "2026-09-03",
+   "cliente": "C05",
+   "categoria": "Vestidos",
+   "prenda": "Vestido negro línea dorada",
+   "talla": "S",
+   "precio": 89000,
+   "canal": "WhatsApp",
+   "estado": "Entregado",
+   "registro": "Angelly"
+  },
+  {
+   "id": "V006",
+   "fecha": "2026-09-03",
+   "cliente": "C06",
+   "categoria": "Blusas",
+   "prenda": "Blusa satín champagne",
+   "talla": "M",
+   "precio": 45000,
+   "canal": "Presencial",
+   "estado": "Entregado",
+   "registro": "Xairy"
+  },
+  {
+   "id": "V007",
+   "fecha": "2026-09-04",
+   "cliente": "C07",
+   "categoria": "Camisas",
+   "prenda": "Camisa lino blanco",
+   "talla": "M",
+   "precio": 52000,
+   "canal": "Instagram",
+   "estado": "Cancelado",
+   "registro": "Xairy"
+  },
+  {
+   "id": "V008",
+   "fecha": "2026-09-04",
+   "cliente": "C08",
+   "categoria": "Vestidos",
+   "prenda": "Vestido midi terracota",
+   "talla": "M",
+   "precio": 95000,
+   "canal": "WhatsApp",
+   "estado": "Entregado",
+   "registro": "Angelly"
+  },
+  {
+   "id": "V009",
+   "fecha": "2026-09-05",
+   "cliente": "C09",
+   "categoria": "Accesorios",
+   "prenda": "Aretes dorados par",
+   "talla": "Única",
+   "precio": 28000,
+   "canal": "WhatsApp",
+   "estado": "Entregado",
+   "registro": "Claudia"
+  },
+  {
+   "id": "V010",
+   "fecha": "2026-09-05",
+   "cliente": "C10",
+   "categoria": "Camisas",
+   "prenda": "Camisa lino blanco",
+   "talla": "L",
+   "precio": 52000,
+   "canal": "Instagram",
+   "estado": "Entregado",
+   "registro": "Xairy"
+  },
+  {
+   "id": "V011",
+   "fecha": "2026-09-08",
+   "cliente": "C11",
+   "categoria": "Blusas",
+   "prenda": "Blusa satín champagne",
+   "talla": "S",
+   "precio": 45000,
+   "canal": "WhatsApp",
+   "estado": "Entregado",
+   "registro": "Angelly"
+  },
+  {
+   "id": "V012",
+   "fecha": "2026-09-08",
+   "cliente": "C12",
+   "categoria": "Vestidos",
+   "prenda": "Vestido negro línea dorada",
+   "talla": "L",
+   "precio": 89000,
+   "canal": "Presencial",
+   "estado": "Entregado",
+   "registro": "Xairy"
+  },
+  {
+   "id": "V013",
+   "fecha": "2026-09-09",
+   "cliente": "C13",
+   "categoria": "Accesorios",
+   "prenda": "Cinturón hebilla dorada",
+   "talla": "M",
+   "precio": 38000,
+   "canal": "Instagram",
+   "estado": "Entregado",
+   "registro": "Claudia"
+  },
+  {
+   "id": "V014",
+   "fecha": "2026-09-09",
+   "cliente": "C14",
+   "categoria": "Vestidos",
+   "prenda": "Vestido midi terracota",
+   "talla": "S",
+   "precio": 95000,
+   "canal": "WhatsApp",
+   "estado": "Entregado",
+   "registro": "Angelly"
+  },
+  {
+   "id": "V015",
+   "fecha": "2026-09-10",
+   "cliente": "C15",
+   "categoria": "Blusas",
+   "prenda": "Blusa satín champagne",
+   "talla": "S",
+   "precio": 45000,
+   "canal": "Instagram",
+   "estado": "Entregado",
+   "registro": "Xairy"
+  },
+  {
+   "id": "V016",
+   "fecha": "2026-09-11",
+   "cliente": "C16",
+   "categoria": "Vestidos",
+   "prenda": "Vestido negro línea dorada",
+   "talla": "M",
+   "precio": 89000,
+   "canal": "Presencial",
+   "estado": "Entregado",
+   "registro": "Albert"
+  },
+  {
+   "id": "V017",
+   "fecha": "2026-09-11",
+   "cliente": "C02",
+   "categoria": "Accesorios",
+   "prenda": "Aretes dorados par",
+   "talla": "Única",
+   "precio": 28000,
+   "canal": "WhatsApp",
+   "estado": "Entregado",
+   "registro": "Claudia"
+  },
+  {
+   "id": "V018",
+   "fecha": "2026-09-12",
+   "cliente": "C01",
+   "categoria": "Blusas",
+   "prenda": "Blusa satín champagne",
+   "talla": "M",
+   "precio": 45000,
+   "canal": "Instagram",
+   "estado": "Entregado",
+   "registro": "Angelly"
+  },
+  {
+   "id": "V019",
+   "fecha": "2026-09-15",
+   "cliente": "C09",
+   "categoria": "Vestidos",
+   "prenda": "Vestido midi terracota",
+   "talla": "M",
+   "precio": 95000,
+   "canal": "WhatsApp",
+   "estado": "Entregado",
+   "registro": "Xairy"
+  },
+  {
+   "id": "V020",
+   "fecha": "2026-09-16",
+   "cliente": "C08",
+   "categoria": "Accesorios",
+   "prenda": "Bolso estructurado negro",
+   "talla": "Única",
+   "precio": 72000,
+   "canal": "WhatsApp",
+   "estado": "Entregado",
+   "registro": "Claudia"
+  },
+  {
+   "id": "V021",
+   "fecha": "2026-09-17",
+   "cliente": "C11",
+   "categoria": "Vestidos",
+   "prenda": "Vestido negro línea dorada",
+   "talla": "S",
+   "precio": 89000,
+   "canal": "WhatsApp",
+   "estado": "Entregado",
+   "registro": "Angelly"
+  },
+  {
+   "id": "V022",
+   "fecha": "2026-09-18",
+   "cliente": "C04",
+   "categoria": "Camisas",
+   "prenda": "Camisa lino blanco",
+   "talla": "M",
+   "precio": 52000,
+   "canal": "Instagram",
+   "estado": "Entregado",
+   "registro": "Xairy"
+  },
+  {
+   "id": "V023",
+   "fecha": "2026-09-18",
+   "cliente": "C03",
+   "categoria": "Blusas",
+   "prenda": "Blusa satín champagne",
+   "talla": "L",
+   "precio": 45000,
+   "canal": "WhatsApp",
+   "estado": "No había talla",
+   "registro": "Angelly"
+  },
+  {
+   "id": "V024",
+   "fecha": "2026-09-19",
+   "cliente": "C05",
+   "categoria": "Accesorios",
+   "prenda": "Cinturón hebilla dorada",
+   "talla": "S",
+   "precio": 38000,
+   "canal": "WhatsApp",
+   "estado": "Entregado",
+   "registro": "Claudia"
+  }
+ ],
+ "clientes": [
+  {
+   "id": "C01",
+   "edad": 22,
+   "sexo": "Mujer",
+   "canal": "Instagram",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "Sí",
+   "frecuencia": "1 vez al mes"
+  },
+  {
+   "id": "C02",
+   "edad": 19,
+   "sexo": "Mujer",
+   "canal": "WhatsApp",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "Sí",
+   "frecuencia": "2 veces al mes"
+  },
+  {
+   "id": "C03",
+   "edad": 28,
+   "sexo": "Mujer",
+   "canal": "WhatsApp",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "No",
+   "frecuencia": "Cada dos meses"
+  },
+  {
+   "id": "C04",
+   "edad": 24,
+   "sexo": "Hombre",
+   "canal": "Instagram",
+   "preguntoPrecio": "No",
+   "preguntoTalla": "Sí",
+   "frecuencia": "1 vez al mes"
+  },
+  {
+   "id": "C05",
+   "edad": 17,
+   "sexo": "Mujer",
+   "canal": "WhatsApp",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "Sí",
+   "frecuencia": "1 vez al mes"
+  },
+  {
+   "id": "C06",
+   "edad": 36,
+   "sexo": "Mujer",
+   "canal": "Presencial",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "Sí",
+   "frecuencia": "Cada dos meses"
+  },
+  {
+   "id": "C07",
+   "edad": 21,
+   "sexo": "Hombre",
+   "canal": "Instagram",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "No",
+   "frecuencia": "Casi no compra"
+  },
+  {
+   "id": "C08",
+   "edad": 20,
+   "sexo": "Mujer",
+   "canal": "WhatsApp",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "Sí",
+   "frecuencia": "2 veces al mes"
+  },
+  {
+   "id": "C09",
+   "edad": 31,
+   "sexo": "Mujer",
+   "canal": "WhatsApp",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "Sí",
+   "frecuencia": "1 vez al mes"
+  },
+  {
+   "id": "C10",
+   "edad": 27,
+   "sexo": "Hombre",
+   "canal": "Instagram",
+   "preguntoPrecio": "No",
+   "preguntoTalla": "No",
+   "frecuencia": "1 vez al mes"
+  },
+  {
+   "id": "C11",
+   "edad": 18,
+   "sexo": "Mujer",
+   "canal": "WhatsApp",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "Sí",
+   "frecuencia": "2 veces al mes"
+  },
+  {
+   "id": "C12",
+   "edad": 41,
+   "sexo": "Mujer",
+   "canal": "Presencial",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "Sí",
+   "frecuencia": "Cada dos meses"
+  },
+  {
+   "id": "C13",
+   "edad": 23,
+   "sexo": "Hombre",
+   "canal": "Instagram",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "Sí",
+   "frecuencia": "1 vez al mes"
+  },
+  {
+   "id": "C14",
+   "edad": 25,
+   "sexo": "Mujer",
+   "canal": "WhatsApp",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "Sí",
+   "frecuencia": "1 vez al mes"
+  },
+  {
+   "id": "C15",
+   "edad": 16,
+   "sexo": "Mujer",
+   "canal": "Instagram",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "Sí",
+   "frecuencia": "1 vez al mes"
+  },
+  {
+   "id": "C16",
+   "edad": 40,
+   "sexo": "Mujer",
+   "canal": "Presencial",
+   "preguntoPrecio": "Sí",
+   "preguntoTalla": "Sí",
+   "frecuencia": "Pedido grupal"
+  }
+ ]
+};

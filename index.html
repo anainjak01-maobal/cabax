@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CABAX · Catálogo</title>
+<meta name="description" content="Alta costura audaz en Maicao: mira el precio, la talla y la calidad de cada prenda antes de pagar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;1,6..96,500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="cabax.css">
+<style>
+.hero { padding-block: 40px 20px; max-width: 760px; }
+.hero h1 { font-family: var(--f-display); font-weight: 500; font-size: clamp(32px, 6vw, 54px); line-height: 1.04; margin: 0 0 14px; letter-spacing: -.01em; text-wrap: balance; }
+.hero p { margin: 0; color: var(--muted); font-size: 17px; max-width: 56ch; }
+.stock-line { margin-top: 14px; font-size: 14px; font-weight: 600; color: var(--teal); }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-block: 22px 18px; }
+.chip { border: 1px solid #cfc9bd; background: transparent; border-radius: 999px; padding: 7px 16px; font-weight: 600; font-size: 14px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 22px 18px; }
+.prod { display: flex; flex-direction: column; min-width: 0; }
+.ph { position: relative; aspect-ratio: 4 / 5; background: var(--tint, #e9e4d8); border-radius: 4px; overflow: hidden; display: grid; place-items: center; }
+.ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ph svg { width: 46%; opacity: .55; }
+.ph .soon { position: absolute; top: 10px; left: 12px; font-size: 12px; color: rgba(20,19,17,.6); font-weight: 600; }
+.tag { position: absolute; left: 0; bottom: 14px; background: var(--ink); color: var(--gold-bright); font-family: var(--f-display); font-weight: 700; font-size: 22px; padding: 6px 14px 6px 12px; letter-spacing: .01em; font-variant-numeric: lining-nums; }
+.prod h2 { font-family: var(--f-display); font-weight: 500; font-size: 21px; line-height: 1.15; margin: 12px 0 2px; }
+.prod .cat { font-size: 13px; color: var(--muted); font-weight: 600; }
+.prod .q { font-size: 14px; color: #3d3a34; margin: 8px 0 12px; }
+.sizes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+.sz { min-width: 44px; height: 44px; padding: 0 10px; border: 1px solid var(--ink); background: #fff; border-radius: 4px; font-weight: 700; cursor: pointer; display: grid; place-items: center; line-height: 1.1; }
+.sz small { display: block; font-size: 10.5px; font-weight: 600; color: var(--gold); }
+.sz[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.sz[aria-pressed="true"] small { color: var(--gold-bright); }
+.sz:disabled { border-color: #d3cec3; color: #9a958a; background: transparent; text-decoration: line-through; cursor: not-allowed; }
+.sz:disabled small { text-decoration: none; color: #8a857a; }
+.add { margin-top: 10px; width: 100%; }
+.empty { color: var(--muted); padding: 40px 0; }
+
+.bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--ink); color: #fff; z-index: 30; padding: 12px max(16px, env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+.bar .in { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+.bar .info { flex: 1; min-width: 0; line-height: 1.2; }
+.bar .info small { color: #b9b3a6; font-size: 12.5px; display: block; }
+.bar .info b { font-family: var(--f-display); font-size: 22px; color: var(--gold-bright); }
+
+dialog { border: 0; padding: 0; width: min(560px, 100vw); max-width: 100vw; max-height: 100dvh; border-radius: 12px 12px 0 0; background: var(--paper); color: var(--ink); margin: auto auto 0; }
+dialog::backdrop { background: rgba(20,19,17,.55); }
+.sheet { padding: 18px max(16px, env(safe-area-inset-left)) calc(20px + env(safe-area-inset-bottom)); display: grid; gap: 14px; max-height: 92dvh; overflow: auto; }
+.sheet h2 { font-family: var(--f-display); font-weight: 500; font-size: 26px; margin: 0; }
+.lines { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.ln { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.ln b { font-weight: 600; display: block; }
+.ln span { font-size: 13.5px; color: var(--muted); }
+.ln .p { font-family: var(--f-display); font-weight: 700; white-space: nowrap; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.err-t { color: var(--bad); font-size: 13.5px; margin: -6px 0 0; }
+.total { display: flex; justify-content: space-between; align-items: baseline; font-size: 15px; }
+.total b { font-family: var(--f-display); font-size: 26px; }
+.note { font-size: 13.5px; color: var(--muted); margin: 0; }
+.acts { display: flex; gap: 10px; flex-wrap: wrap; }
+.acts .btn { flex: 1; min-width: 150px; }
+@media (max-width: 560px) {
+  .slogan { display: none; }
+  .hero { padding-block: 26px 8px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; }
+  .tag { font-size: 17px; padding: 5px 10px 5px 9px; bottom: 10px; }
+  .prod h2 { font-size: 17px; }
+  .prod .q { font-size: 13px; }
+  .sz { min-width: 40px; height: 42px; padding: 0 8px; }
+}
+@media (max-width: 360px) { .row2 { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: no-preference) { .sz, .btn, .chip { transition: background-color .15s, color .15s; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="CABAX, inicio"><span class="wordmark">CABAX</span><span class="slogan">Alta costura audaz, belleza atemporal</span></a>
+    <nav class="nav" aria-label="Principal"><a href="index.html" aria-current="page">Catálogo</a><a href="tablero.html">Tablero</a></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Precio, talla y calidad a la vista, antes de pagar.</h1>
+    <p>Cada prenda muestra su valor y qué tallas quedan hoy. Lo que está tachado no se puede entregar, y por eso no te lo ofrecemos.</p>
+    <div class="stock-line" id="stock-line" aria-live="polite"></div>
+  </section>
+  <div id="avisos"></div>
+  <div class="chips" id="chips" role="group" aria-label="Filtrar por categoría"></div>
+  <div class="grid" id="grid"></div>
+  <p class="empty" id="empty" hidden>Cargando el catálogo…</p>
+  <p class="foot">Los pedidos se confirman por WhatsApp. El pago y la entrega los acordamos por ahí; en este sitio no se paga.</p>
+</main>
+
+<div class="bar" id="bar" hidden>
+  <div class="in">
+    <div class="info"><small id="bar-n">Mi pedido</small><b id="bar-t">$0</b></div>
+    <button class="btn gold" id="open-bag" type="button">Ver mi pedido</button>
+  </div>
+</div>
+
+<dialog id="bag" aria-labelledby="bag-h">
+  <form class="sheet" id="f" method="dialog" novalidate>
+    <h2 id="bag-h">Mi pedido</h2>
+    <div class="lines" id="lines"></div>
+    <div class="total"><span>Total</span><b id="total">$0</b></div>
+    <label class="f">Tu nombre<input type="text" id="nombre" maxlength="40" autocomplete="given-name" placeholder="Ej.: María L."></label>
+    <p class="err-t" id="e-nombre" hidden>Escribe tu nombre para poder confirmar el pedido.</p>
+    <div class="row2">
+      <label class="f">Edad<input type="number" id="edad" min="10" max="99" inputmode="numeric" placeholder="22"></label>
+      <label class="f">Sexo<select id="sexo"><option value="">Prefiero no decir</option><option>Mujer</option><option>Hombre</option></select></label>
+    </div>
+    <div class="row2">
+      <label class="f">¿Cada cuánto compras ropa?<select id="frec"><option value="">Prefiero no decir</option><option>2 veces al mes</option><option>1 vez al mes</option><option>Cada dos meses</option><option>Casi no compra</option></select></label>
+      <label class="f">¿Para qué día?<input type="date" id="fecha"></label>
+    </div>
+    <label class="f">Nota (opcional)<textarea id="nota" rows="2" maxlength="140" placeholder="Ej.: lo recojo en el descanso"></textarea></label>
+    <p class="note">Edad, sexo y frecuencia ayudan al equipo a decidir qué reponer. Son opcionales y no se muestran con tu nombre.</p>
+    <div class="acts">
+      <button class="btn gold" type="button" id="wa">Enviar por WhatsApp</button>
+      <button class="btn ghost" type="button" id="copy">Copiar mensaje</button>
+      <button class="btn ghost" type="button" id="close">Seguir mirando</button>
+    </div>
+  </form>
+</dialog>
+<div class="toast" id="toast" hidden></div>
+
+<script src="config.js"></script>
+<script src="demo-data.js"></script>
+<script src="lib.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); }, X = window.CX, esc = X.esc, money = X.money;
+  var data, stock, bag = [], cat = "Todo";
+  var TINTS = { "Vestidos": "#e6ddd0", "Blusas": "#ebe3d2", "Camisas": "#e3e5e2", "Accesorios": "#e8dfc7" };
+  var GLYPH = {
+    "Vestidos": '<path d="M24 6h16l-3 14 9 38H18l9-38z" fill="none" stroke="#141311" stroke-width="1.6" stroke-linejoin="round"/><path d="M27 20h10" stroke="#8a6a1e" stroke-width="1.6"/>',
+    "Blusas": '<path d="M20 8l12 6 12-6 12 10-8 8v30H16V26l-8-8z" fill="none" stroke="#141311" stroke-width="1.6" stroke-linejoin="round"/><path d="M26 10l6 10 6-10" fill="none" stroke="#8a6a1e" stroke-width="1.6"/>',
+    "Camisas": '<path d="M22 8l10 6 10-6 14 10-6 8-6-3v34H20V23l-6 3-6-8z" fill="none" stroke="#141311" stroke-width="1.6" stroke-linejoin="round"/><path d="M32 14v44" stroke="#8a6a1e" stroke-width="1.6"/>',
+    "Accesorios": '<circle cx="32" cy="32" r="16" fill="none" stroke="#141311" stroke-width="1.6"/><circle cx="32" cy="32" r="8" fill="none" stroke="#8a6a1e" stroke-width="1.6"/>'
+  };
+
+  function toast(t) { var e = $("toast"); e.textContent = t; e.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(function () { e.hidden = true; }, 3200); }
+
+  function groups() {
+    var by = {}, order = [];
+    stock.rows.forEach(function (r) {
+      var k = r.item.codigo || r.item.prenda;
+      if (!by[k]) { by[k] = { k: k, prenda: r.item.prenda, categoria: r.item.categoria, precio: r.item.precio, calidad: r.item.calidad, foto: r.item.foto, tallas: [] }; order.push(k); }
+      by[k].tallas.push(r);
+    });
+    return order.map(function (k) { by[k].tallas.sort(function (a, b) { return X.tallaIdx(a.item.talla) - X.tallaIdx(b.item.talla); }); return by[k]; });
+  }
+  var sel = {};   /* talla elegida por prenda: { codigo: "M" } */
+
+  function render() {
+    var gs = groups(), cats = ["Todo"];
+    gs.forEach(function (g) { if (cats.indexOf(g.categoria) < 0) cats.push(g.categoria); });
+    $("chips").innerHTML = cats.map(function (c) { return '<button class="chip" type="button" data-cat="' + esc(c) + '" aria-pressed="' + (c === cat) + '">' + esc(c) + "</button>"; }).join("");
+    var list = gs.filter(function (g) { return cat === "Todo" || g.categoria === cat; });
+    var disp = X.sum(stock.rows, function (r) { return Math.max(0, r.disp); });
+    var agot = stock.rows.filter(function (r) { return r.disp <= 0; }).length;
+    $("stock-line").textContent = disp + " unidades disponibles hoy" + (agot ? " · " + agot + (agot === 1 ? " talla agotada" : " tallas agotadas") : "");
+    $("empty").hidden = list.length > 0; if (!list.length) $("empty").textContent = "No hay prendas en esta categoría por ahora.";
+    $("grid").innerHTML = list.map(function (g) {
+      var photo = g.foto ? '<img src="' + esc(g.foto) + '" alt="' + esc(g.prenda) + '" loading="lazy">' : '<svg viewBox="0 0 64 64" aria-hidden="true">' + (GLYPH[g.categoria] || GLYPH["Accesorios"]) + '</svg><span class="soon">Foto próximamente</span>';
+      var sizes = g.tallas.map(function (r) {
+        var t = r.item.talla, off = r.disp <= 0, inBag = bag.some(function (b) { return b.key === X.key(g.prenda, t); });
+        var pressed = !off && (sel[g.k] === t);
+        return '<button class="sz" type="button" data-g="' + esc(g.k) + '" data-t="' + esc(t) + '" aria-pressed="' + pressed + '"' + (off ? " disabled" : "") + ' aria-label="Talla ' + esc(t) + (off ? ", agotada" : (r.disp === 1 ? ", última unidad" : "")) + '">' + esc(t) + (off ? "<small>Agotada</small>" : (r.disp === 1 ? "<small>Última</small>" : "")) + "</button>";
+      }).join("");
+      var all0 = g.tallas.every(function (r) { return r.disp <= 0; });
+      return '<article class="prod"><div class="ph" style="--tint:' + (TINTS[g.categoria] || "#e9e4d8") + '">' + photo + '<span class="tag">' + money(g.precio) + '</span></div><h2>' + esc(g.prenda) + '</h2><span class="cat">' + esc(g.categoria) + "</span>" + (g.calidad ? '<p class="q">' + esc(g.calidad) + "</p>" : '<p class="q"></p>') + '<div class="sizes" role="group" aria-label="Tallas de ' + esc(g.prenda) + '">' + sizes + "</div>" +
+        '<button class="btn add" type="button" data-add="' + esc(g.k) + '"' + (sel[g.k] && !all0 ? "" : " disabled") + ">" + (all0 ? "Agotada por ahora" : (sel[g.k] ? "Agregar talla " + esc(sel[g.k]) + " a mi pedido" : "Elige una talla")) + "</button></article>";
+    }).join("");
+    renderBag();
+  }
+
+  function renderBag() {
+    var n = bag.length, tot = X.sum(bag, function (b) { return b.precio; });
+    $("bar").hidden = n === 0;
+    $("bar-n").textContent = n + (n === 1 ? " prenda en mi pedido" : " prendas en mi pedido");
+    $("bar-t").textContent = money(tot);
+    $("total").textContent = money(tot);
+    $("lines").innerHTML = bag.length ? bag.map(function (b, i) {
+      return '<div class="ln"><div><b>' + esc(b.prenda) + "</b><span>Talla " + esc(b.talla) + '</span></div><div style="display:flex;align-items:center;gap:10px"><span class="p">' + money(b.precio) + '</span><button class="btn ghost sm" type="button" data-rm="' + i + '" aria-label="Quitar ' + esc(b.prenda) + ', talla ' + esc(b.talla) + '">Quitar</button></div></div>';
+    }).join("") : '<p class="note" style="padding:10px 0">Tu pedido está vacío. Elige una talla y toca “Agregar”.</p>';
+  }
+
+  $("chips").addEventListener("click", function (e) { var b = e.target.closest("[data-cat]"); if (!b) return; cat = b.dataset.cat; render(); });
+  $("grid").addEventListener("click", function (e) {
+    var s = e.target.closest(".sz"), a = e.target.closest("[data-add]");
+    if (s && !s.disabled) { sel[s.dataset.g] = sel[s.dataset.g] === s.dataset.t ? "" : s.dataset.t; render(); return; }
+    if (a && !a.disabled) {
+      var g = groups().filter(function (x) { return x.k === a.dataset.add; })[0], t = sel[a.dataset.add]; if (!g || !t) return;
+      var k = X.key(g.prenda, t);
+      if (bag.some(function (b) { return b.key === k; })) { toast("Esa prenda ya está en tu pedido."); return; }
+      bag.push({ key: k, prenda: g.prenda, talla: t, precio: g.precio, categoria: g.categoria });
+      sel[a.dataset.add] = ""; toast(g.prenda + " (talla " + t + ") agregada."); render();
+    }
+  });
+  $("open-bag").addEventListener("click", function () { $("bag").showModal(); });
+  $("close").addEventListener("click", function () { $("bag").close(); });
+  $("lines").addEventListener("click", function (e) { var r = e.target.closest("[data-rm]"); if (!r) return; bag.splice(+r.dataset.rm, 1); render(); if (!bag.length) $("bag").close(); });
+
+  function buildMsg() {
+    var f = $("fecha").value, nota = $("nota").value.trim(), L = ["🛍️ *Pedido CABAX*", "Nombre: " + $("nombre").value.trim()];
+    if ($("edad").value) L.push("Edad: " + $("edad").value);
+    if ($("sexo").value) L.push("Sexo: " + $("sexo").value);
+    if ($("frec").value) L.push("Compra ropa: " + $("frec").value);
+    if (f) L.push("Entrega: " + f + " (" + X.dayName(f) + ")");
+    L.push("Prendas:");
+    bag.forEach(function (b) { L.push("- " + b.prenda + " · Talla " + b.talla + " · " + money(b.precio)); });
+    L.push("Total: " + money(X.sum(bag, function (b) { return b.precio; })));
+    if (nota) L.push("Nota: " + nota);
+    return L.join("\n");
+  }
+  function validate() {
+    if (!bag.length) { toast("Tu pedido está vacío."); return false; }
+    var ok = !!$("nombre").value.trim(); $("e-nombre").hidden = ok; if (!ok) $("nombre").focus();
+    return ok;
+  }
+  /* Antes de enviar se vuelve a leer el inventario: si algo se agotó o cambió de precio, se avisa. */
+  function recheck() {
+    return X.loadData().then(function (d) {
+      var s = X.stockTable(d.inv, d.ped), msgs = [];
+      bag = bag.filter(function (b) {
+        var r = s.rows.filter(function (x) { return X.key(x.item.prenda, x.item.talla) === b.key; })[0];
+        if (!r || r.disp <= 0) { msgs.push(b.prenda + " (talla " + b.talla + ") se agotó"); return false; }
+        if (r.item.precio !== b.precio) { msgs.push(b.prenda + " cambió a " + money(r.item.precio)); b.precio = r.item.precio; }
+        return true;
+      });
+      data = d; stock = s; render();
+      return msgs;
+    }).catch(function () { return []; });
+  }
+  $("wa").addEventListener("click", function () {
+    if (!validate()) return;
+    /* la ventana se abre ya (antes de leer el inventario) para que el navegador no la bloquee */
+    var win = window.open("", "_blank");
+    recheck().then(function (msgs) {
+      if (msgs.length) { if (win) win.close(); toast("Ojo: " + msgs.join("; ") + ". Revisa tu pedido."); if (!bag.length) $("bag").close(); return; }
+      var url = "https://wa.me/" + (X.CFG.WHATSAPP || "").replace(/\D/g, "") + "?text=" + encodeURIComponent(buildMsg());
+      if (win) win.location.href = url; else window.location.href = url;
+    });
+  });
+  $("copy").addEventListener("click", function () {
+    if (!validate()) return;
+    var m = buildMsg();
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(m).then(function () { toast("Mensaje copiado. Pégalo en el chat de CABAX."); }, function () { toast("No se pudo copiar. Usa el botón de WhatsApp."); });
+    else toast("No se pudo copiar. Usa el botón de WhatsApp.");
+  });
+
+  $("fecha").min = X.today(); $("fecha").value = X.today();
+  X.loadData().then(function (d) {
+    data = d; stock = X.stockTable(d.inv, d.ped);
+    var av = d.avisos.slice(); if (d.modo === "demo" && !av.length) av.push("Estás viendo datos de demostración. Conecta las hojas de Google en config.js para ver el inventario real.");
+    $("avisos").innerHTML = av.map(function (a) { return '<div class="banner' + (d.avisos.length ? " err" : "") + '" role="status">' + esc(a) + "</div>"; }).join("");
+    render();
+  });
+})();
+</script>
+</body>
+</html>

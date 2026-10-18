@@ -1,0 +1,54 @@
+/* CABAX · estilos comunes. Negro y dorado de la marca; turquesa solo para datos. */
+:root {
+  --ink: #141311;
+  --paper: #f8f7f4;
+  --card: #ffffff;
+  --line: #e4e0d7;
+  --muted: #67625a;
+  --gold: #8a6a1e;          /* dorado para texto sobre claro */
+  --gold-bright: #d4ac52;   /* dorado sobre negro */
+  --teal: #0f7f78;          /* datos */
+  --teal-soft: #d9efec;
+  --bad: #b3261e; --bad-soft: #f8e1df;
+  --warn: #8f5a00; --warn-soft: #f9ecc9;
+  --good: #1d7048; --good-soft: #dff0e6;
+  --f-display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --f-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 var(--f-body); }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: max(16px, env(safe-area-inset-left)); }
+[hidden] { display: none !important; }
+
+.top { background: var(--ink); color: #fff; }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 16px; flex-wrap: wrap; }
+.brand { display: flex; align-items: baseline; gap: 14px; text-decoration: none; min-width: 0; flex-wrap: wrap; }
+.wordmark { font-family: var(--f-display); font-weight: 700; font-size: 30px; letter-spacing: .32em; color: var(--gold-bright); line-height: 1; padding-left: .32em; }
+.slogan { font-family: var(--f-display); font-style: italic; font-size: 14px; color: #cfc9bd; }
+.nav { display: flex; gap: 6px; }
+.nav a { text-decoration: none; padding: 8px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; color: #e7e2d8; border: 1px solid transparent; }
+.nav a[aria-current="page"] { border-color: var(--gold-bright); color: var(--gold-bright); }
+.nav a:hover { border-color: #5b564c; }
+
+.banner { padding: 10px 14px; border-radius: 8px; font-size: 14px; margin-block: 12px; background: var(--warn-soft); color: #4d3200; border: 1px solid #e6cf8c; }
+.banner.err { background: var(--bad-soft); color: #5c120d; border-color: #e3aaa5; }
+
+.btn { appearance: none; border: 1px solid var(--ink); background: var(--ink); color: #fff; border-radius: 8px; padding: 11px 18px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; text-align: center; }
+.btn:hover { background: #2a2824; }
+.btn.gold { background: var(--gold-bright); border-color: var(--gold-bright); color: #1d1608; }
+.btn.gold:hover { background: #dcb862; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover { background: #efece5; }
+.btn.sm { padding: 6px 12px; font-size: 13.5px; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+label.f { display: grid; gap: 4px; font-size: 13.5px; font-weight: 600; color: var(--muted); }
+input[type=text], input[type=number], input[type=date], select, textarea { background: #fff; border: 1px solid #cfc9bd; border-radius: 8px; padding: 10px 12px; width: 100%; min-width: 0; font-weight: 500; color: var(--ink); }
+textarea { resize: vertical; }
+
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 88px; background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 14px; z-index: 50; max-width: calc(100% - 32px); }
+.foot { padding-block: 28px 100px; color: var(--muted); font-size: 13px; }

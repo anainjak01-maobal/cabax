@@ -1,0 +1,27 @@
+CABAX · MVP web (catálogo + pedido + tablero)
+=============================================
+
+ARCHIVOS
+  index.html      Catálogo para clientes (precio, talla, calidad; pide por WhatsApp)
+  tablero.html    Tablero del equipo (resumen, inventario, clientes, registrar pedido)
+  config.js       ÚNICO archivo que se edita (WhatsApp y enlaces de las hojas)
+  cabax-datos.xlsx  Base de datos para importar a Google Sheets
+  lib.js, cabax.css, demo-data.js, fotos/   No se tocan (fotos: aquí van las imágenes)
+
+PASO A PASO
+1. Google Sheets: Nuevo > Archivo > Importar > subir cabax-datos.xlsx > "Reemplazar hoja de cálculo".
+2. Publicar SOLO tres pestañas: Archivo > Compartir > Publicar en la web >
+   elegir la pestaña > formato CSV > Publicar. Repetir con Inventario, Pedidos y Clientes.
+   NUNCA publicar Directorio (tiene los nombres) ni Instrucciones.
+3. Copiar los tres enlaces en config.js (HOJAS) y el WhatsApp del negocio
+   (indicativo + número, sin + ni espacios; Colombia: 57XXXXXXXXXX).
+4. GitHub: crear un repositorio PÚBLICO, subir todos los archivos (index.html en la raíz),
+   Settings > Pages > Deploy from a branch > main / (root).
+5. Abrir https://USUARIO.github.io/REPOSITORIO/ (catálogo) y .../tablero.html (equipo).
+
+OJO
+- Sin enlaces en config.js el sitio muestra datos de DEMOSTRACIÓN (aparece un aviso).
+- Lo publicado como CSV es público: sin nombres ni teléfonos en Inventario, Pedidos ni Clientes.
+  El costo unitario del Inventario también queda visible; si no se quiere, vaciar esa columna.
+- Los pedidos, clientes, stock y textos de calidad son datos de ejemplo: reemplazarlos por los reales.
+- Cambios en la hoja se ven en el sitio en pocos minutos (Google actualiza el CSV publicado).

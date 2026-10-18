@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CABAX · Tablero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;1,6..96,500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="cabax.css">
+<style>
+.page-h { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; padding-block: 28px 14px; }
+.page-h h1 { font-family: var(--f-display); font-weight: 500; font-size: clamp(26px, 4vw, 38px); margin: 0; line-height: 1.05; }
+.page-h p { margin: 6px 0 0; color: var(--muted); font-size: 14.5px; }
+.tools { display: flex; gap: 10px; align-items: end; flex-wrap: wrap; }
+.tools label.f { font-size: 12.5px; }
+.tools input[type=date] { padding: 7px 10px; width: 150px; }
+.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin-bottom: 22px; overflow-x: auto; scrollbar-width: none; }
+.tab { appearance: none; border: 0; background: transparent; padding: 11px 16px; font-weight: 600; font-size: 15px; color: var(--muted); border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; margin-bottom: -1px; }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--gold-bright); }
+.panel > * + * { margin-top: 26px; }
+
+.ledger { display: grid; grid-template-columns: repeat(5, 1fr); background: var(--ink); color: #fff; border-radius: 4px; }
+.ledger > div { padding: 18px 20px; border-left: 1px solid #3a372f; min-width: 0; }
+.ledger > div:first-child { border-left: 0; }
+.ledger small { display: block; color: #bdb7aa; font-size: 13px; }
+.ledger b { display: block; font-family: var(--f-display); font-weight: 700; font-size: clamp(22px, 3vw, 32px); color: var(--gold-bright); font-variant-numeric: lining-nums tabular-nums; line-height: 1.15; margin-block: 4px; }
+.ledger span { font-size: 12.5px; color: #cfc9bd; }
+
+.cols2 { display: grid; grid-template-columns: 1.1fr .9fr; gap: 36px; }
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+h2.s { font-family: var(--f-display); font-weight: 500; font-size: 22px; margin: 0 0 12px; }
+.sub { font-size: 13.5px; color: var(--muted); margin: -6px 0 12px; }
+
+.bars { display: grid; gap: 10px; }
+.br { display: grid; grid-template-columns: minmax(84px, 130px) 1fr auto; gap: 10px; align-items: center; font-size: 14.5px; }
+.br .t { height: 14px; background: #ebe7de; border-radius: 0 3px 3px 0; position: relative; }
+.br .f { height: 100%; background: var(--teal); border-radius: 0 3px 3px 0; min-width: 2px; }
+.br .f.gold { background: var(--gold-bright); }
+.br b { font-variant-numeric: tabular-nums; font-weight: 600; min-width: 64px; text-align: right; }
+.br span.l { overflow-wrap: anywhere; }
+
+.read { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.read li { padding-left: 16px; border-left: 3px solid var(--gold-bright); font-size: 15.5px; }
+.read li b { font-weight: 700; }
+
+table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+th { text-align: left; font-size: 13px; color: var(--muted); font-weight: 600; padding: 8px 10px; border-bottom: 2px solid var(--ink); white-space: nowrap; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
+.scroll { overflow-x: auto; }
+.al { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13.5px; padding: 2px 10px 2px 8px; border-radius: 999px; white-space: nowrap; }
+.al.Reponer { background: var(--bad-soft); color: #8e1b14; }
+.al.Bajo { background: var(--warn-soft); color: #6f4500; }
+.al.Ok { background: var(--good-soft); color: #14573a; }
+.al svg { width: 12px; height: 12px; flex: none; }
+
+.chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.stat { border: 1px solid var(--line); background: var(--card); border-radius: 6px; padding: 10px 16px; min-width: 130px; }
+.stat b { font-family: var(--f-display); font-size: 26px; display: block; line-height: 1.1; }
+.stat small { color: var(--muted); font-size: 13px; }
+
+.colchart { width: 100%; height: auto; display: block; }
+.colchart text { font: 11px var(--f-body); fill: var(--muted); }
+.colchart rect.bar { fill: var(--teal); }
+.colchart rect.bar:hover { fill: var(--gold); }
+
+.assist { display: grid; gap: 14px; max-width: 880px; }
+.assist textarea { min-height: 170px; font-size: 14.5px; }
+.rowf { display: flex; gap: 14px; flex-wrap: wrap; align-items: end; }
+.rowf > * { flex: 1; min-width: 150px; }
+.radio { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; font-weight: 600; font-size: 14.5px; }
+.radio label { display: inline-flex; gap: 6px; align-items: center; }
+.paste { font: 13px/1.5 ui-monospace, Menlo, Consolas, monospace; background: #fff; border: 1px dashed #b9b3a6; border-radius: 6px; padding: 10px; white-space: pre; overflow-x: auto; }
+.warn { background: var(--warn-soft); border: 1px solid #e6cf8c; color: #4d3200; padding: 8px 12px; border-radius: 6px; font-size: 14px; }
+.okmsg { background: var(--good-soft); color: #14573a; padding: 8px 12px; border-radius: 6px; font-size: 14px; }
+.step { font-weight: 700; margin: 0 0 6px; }
+.rule { font-size: 13.5px; color: var(--muted); }
+@media (max-width: 860px) {
+  .ledger { grid-template-columns: repeat(2, 1fr); }
+  .ledger > div { border-left: 0; border-top: 1px solid #3a372f; }
+  .ledger > div:nth-child(-n+2) { border-top: 0; }
+  .ledger > div:nth-child(even) { border-left: 1px solid #3a372f; }
+  .ledger > div:last-child { grid-column: 1 / -1; border-left: 0; }
+  .cols2, .cols3 { grid-template-columns: 1fr; gap: 26px; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="CABAX, inicio"><span class="wordmark">CABAX</span><span class="slogan">Alta costura audaz, belleza atemporal</span></a>
+    <nav class="nav" aria-label="Principal"><a href="index.html">Catálogo</a><a href="tablero.html" aria-current="page">Tablero</a></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-h">
+    <div><h1>Tablero de ventas e inventario</h1><p id="periodo">Cargando datos…</p></div>
+    <div class="tools">
+      <label class="f">Desde<input type="date" id="desde"></label>
+      <label class="f">Hasta<input type="date" id="hasta"></label>
+      <button class="btn ghost sm" id="limpiar" type="button">Todo el periodo</button>
+      <button class="btn sm" id="recargar" type="button">Actualizar datos</button>
+    </div>
+  </div>
+  <div id="avisos"></div>
+
+  <div class="tabs" role="tablist" aria-label="Secciones del tablero">
+    <button class="tab" role="tab" id="t-resumen" aria-controls="p-resumen" aria-selected="true" data-tab="resumen">Resumen</button>
+    <button class="tab" role="tab" id="t-inventario" aria-controls="p-inventario" aria-selected="false" data-tab="inventario">Inventario</button>
+    <button class="tab" role="tab" id="t-clientes" aria-controls="p-clientes" aria-selected="false" data-tab="clientes">Clientes</button>
+    <button class="tab" role="tab" id="t-registrar" aria-controls="p-registrar" aria-selected="false" data-tab="registrar">Registrar un pedido</button>
+  </div>
+
+  <section class="panel" id="p-resumen" role="tabpanel" aria-labelledby="t-resumen">
+    <div class="ledger" id="ledger"></div>
+    <div><h2 class="s">Lectura del periodo</h2><ul class="read" id="lectura"></ul></div>
+    <div class="cols2">
+      <div><h2 class="s">Ingresos por categoría</h2><div class="bars" id="b-cat"></div></div>
+      <div><h2 class="s">Entregas por canal</h2><div class="bars" id="b-canal"></div></div>
+    </div>
+    <div class="cols2">
+      <div><h2 class="s">Ingresos por día</h2><p class="sub" id="dia-sub"></p><div id="c-dia"></div></div>
+      <div><h2 class="s">Unidades entregadas por talla</h2><div class="bars" id="b-talla"></div></div>
+    </div>
+    <div><h2 class="s">Prendas más vendidas</h2><div class="bars" id="b-prenda"></div></div>
+    <div><h2 class="s">Pedidos que no se entregaron</h2><div class="scroll" id="t-no"></div></div>
+    <div><h2 class="s">Calidad de los datos</h2><div id="calidad"></div></div>
+  </section>
+
+  <section class="panel" id="p-inventario" role="tabpanel" aria-labelledby="t-inventario" hidden>
+    <div class="chips" id="inv-stats"></div>
+    <div><h2 class="s">Inventario por prenda y talla</h2>
+      <p class="sub">Disponibles = stock inicial − entregadas − pendientes. Con 0 se marca <b>Reponer</b>; con 1, <b>Bajo</b>. Sugerencia: pedir lo mismo que se vendió, mínimo 2.</p>
+      <div class="scroll" id="t-inv"></div></div>
+  </section>
+
+  <section class="panel" id="p-clientes" role="tabpanel" aria-labelledby="t-clientes" hidden>
+    <div class="chips" id="cli-stats"></div>
+    <div><h2 class="s">Segmentos de clientes</h2>
+      <p class="sub">Cada cliente entra en el primer segmento cuya regla cumple, en el orden de la tabla. Es una regla simple para este ciclo, no un modelo estadístico.</p>
+      <div class="scroll" id="t-seg"></div></div>
+    <div class="cols3">
+      <div><h2 class="s">Sexo</h2><div class="bars" id="b-sexo"></div></div>
+      <div><h2 class="s">Edad</h2><div class="bars" id="b-edad"></div></div>
+      <div><h2 class="s">¿Cada cuánto compra ropa?</h2><div class="bars" id="b-frec"></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-registrar" role="tabpanel" aria-labelledby="t-registrar" hidden>
+    <div class="assist">
+      <div><h2 class="s">Registrar un pedido que llegó por WhatsApp</h2>
+        <p class="sub">Pega el mensaje del cliente. El asistente prepara las filas para pegarlas en la hoja de Google; este sitio no guarda nada por sí mismo.</p></div>
+      <label class="f">Mensaje del cliente<textarea id="msg" placeholder="🛍️ *Pedido CABAX*&#10;Nombre: …&#10;Prendas:&#10;- Vestido negro línea dorada · Talla M · $89.000"></textarea></label>
+      <div class="rowf">
+        <label class="f">Quién registra<select id="quien"></select></label>
+        <label class="f">Canal<select id="canal"><option>WhatsApp</option><option>Instagram</option><option>Presencial</option></select></label>
+        <button class="btn gold" type="button" id="prep">Preparar filas</button>
+      </div>
+      <div id="out"></div>
+    </div>
+  </section>
+
+  <p class="foot" id="foot"></p>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script src="config.js"></script>
+<script src="demo-data.js"></script>
+<script src="lib.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); }, X = window.CX, esc = X.esc, money = X.money, norm = X.norm, sum = X.sum;
+  var data, stock, loadedAt;
+
+  function toast(t) { var e = $("toast"); e.textContent = t; e.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(function () { e.hidden = true; }, 3000); }
+
+  /* ---------- pestañas ---------- */
+  var TABS = ["resumen", "inventario", "clientes", "registrar"];
+  function showTab(n) { TABS.forEach(function (t) { $("p-" + t).hidden = t !== n; $("t-" + t).setAttribute("aria-selected", t === n ? "true" : "false"); }); try { history.replaceState(null, "", "#" + n); } catch (e) {} }
+  document.querySelector(".tabs").addEventListener("click", function (e) { var b = e.target.closest("[data-tab]"); if (b) showTab(b.dataset.tab); });
+  document.querySelector(".tabs").addEventListener("keydown", function (e) {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    var cur = TABS.indexOf((document.querySelector('.tab[aria-selected="true"]') || {}).dataset.tab), n = TABS[(cur + (e.key === "ArrowRight" ? 1 : TABS.length - 1)) % TABS.length];
+    showTab(n); $("t-" + n).focus();
+  });
+
+  /* ---------- utilidades de gráficos ---------- */
+  function bars(items, o) {
+    o = o || {}; var max = Math.max.apply(null, items.map(function (i) { return i.v; }).concat([1]));
+    if (!items.length) return '<p class="rule">Sin datos en este periodo.</p>';
+    return items.map(function (i) { return '<div class="br"><span class="l">' + esc(i.l) + '</span><div class="t"><div class="f' + (i.gold ? " gold" : "") + '" style="width:' + Math.max(1.5, i.v * 100 / max) + '%"></div></div><b>' + (o.money ? money(i.v) : i.v) + (o.suffix || "") + "</b></div>"; }).join("");
+  }
+  function countBy(list, fn) { var m = {}; list.forEach(function (x) { var k = fn(x); m[k] = (m[k] || 0) + 1; }); return m; }
+  function sumBy(list, kf, vf) { var m = {}; list.forEach(function (x) { var k = kf(x); m[k] = (m[k] || 0) + vf(x); }); return m; }
+  function toItems(m, opt) { opt = opt || {}; var a = Object.keys(m).map(function (k) { return { l: k, v: m[k] }; }); a.sort(opt.sort || function (x, y) { return y.v - x.v; }); if (a.length && !opt.noGold) a[0].gold = true; return a; }
+
+  var ICON = {
+    Reponer: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1l5.5 10h-11z" fill="currentColor"/></svg>',
+    Bajo: '<svg viewBox="0 0 12 12" aria-hidden="true"><rect x="1.5" y="1.5" width="9" height="9" rx="1" fill="currentColor"/></svg>',
+    Ok: '<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="currentColor"/></svg>'
+  };
+  function alerta(a) { return '<span class="al ' + a + '">' + ICON[a] + a + "</span>"; }
+
+  /* ---------- cálculo ---------- */
+  function filtered() {
+    var d = $("desde").value, h = $("hasta").value;
+    return data.ped.filter(function (p) { return (!d || p.fecha >= d) && (!h || p.fecha <= h); });
+  }
+  function costOf(p) { var s = stock.map[X.key(p.prenda, p.talla)]; return s ? s.item.costo : 0; }
+
+  function renderResumen(ps) {
+    var ent = ps.filter(X.entregado), pen = ps.filter(function (p) { return norm(p.estado) === "pendiente"; });
+    var no = ps.filter(function (p) { return !X.entregado(p) && norm(p.estado) !== "pendiente"; });
+    var ing = sum(ent, function (p) { return p.precio; }), cos = sum(ent, costOf), mar = ing - cos;
+    var cliEnt = {}; ent.forEach(function (p) { cliEnt[p.cliente] = 1; });
+    var preg = data.cli.filter(function (c) { return norm(c.preguntoPrecio).indexOf("s") === 0; }).length;
+    $("ledger").innerHTML =
+      '<div><small>Entregados</small><b>' + ent.length + '</b><span>de ' + ps.length + ' pedidos' + (pen.length ? " · " + pen.length + " en espera" : "") + "</span></div>" +
+      '<div><small>Ingresos</small><b>' + money(ing) + '</b><span>solo lo entregado</span></div>' +
+      '<div><small>Margen aproximado</small><b>' + money(mar) + '</b><span>' + X.pct(mar, ing) + ' del ingreso, sin tiempo ni fijos</span></div>' +
+      '<div><small>Ticket promedio</small><b>' + (ent.length ? money(ing / ent.length) : "—") + '</b><span>por pedido entregado</span></div>' +
+      '<div><small>Preguntaron el precio</small><b>' + preg + " de " + data.cli.length + '</b><span>antes de decidir</span></div>';
+
+    var byCat = sumBy(ent, function (p) { return p.categoria || "Sin categoría"; }, function (p) { return p.precio; });
+    var byCanal = countBy(ent, function (p) { return p.canal || "Sin canal"; });
+    var byTalla = countBy(ent, function (p) { return p.talla; });
+    var byPrenda = countBy(ent, function (p) { return p.prenda; });
+    $("b-cat").innerHTML = bars(toItems(byCat), { money: true });
+    $("b-canal").innerHTML = bars(toItems(byCanal));
+    $("b-talla").innerHTML = bars(toItems(byTalla, { sort: function (a, b) { return X.tallaIdx(a.l) - X.tallaIdx(b.l); }, noGold: true }));
+    $("b-prenda").innerHTML = bars(toItems(byPrenda).slice(0, 6));
+
+    /* ingresos por día */
+    var days = sumBy(ent, function (p) { return p.fecha; }, function (p) { return p.precio; }), keys = Object.keys(days).sort();
+    if (keys.length) {
+      var a = new Date(keys[0] + "T12:00:00"), b = new Date(keys[keys.length - 1] + "T12:00:00"), seq = [];
+      for (var d = new Date(a); d <= b; d.setDate(d.getDate() + 1)) { var k = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); seq.push({ k: k, v: days[k] || 0 }); }
+      var max = Math.max.apply(null, seq.map(function (x) { return x.v; })), W = 600, H = 170, pad = 22, bw = (W - 10) / seq.length;
+      $("c-dia").innerHTML = '<svg class="colchart" viewBox="0 0 ' + W + " " + (H + pad) + '" role="img" aria-label="Ingresos por día entre el ' + X.fmtDate(seq[0].k) + " y el " + X.fmtDate(seq[seq.length - 1].k) + ". Máximo " + money(max) + '.">' +
+        '<line x1="0" x2="' + W + '" y1="' + H + '" y2="' + H + '" stroke="#b9b3a6"/>' +
+        seq.map(function (x, i) { var h = max ? Math.round(x.v * (H - 14) / max) : 0; return '<rect class="bar" x="' + (5 + i * bw + bw * .12) + '" y="' + (H - h) + '" width="' + (bw * .76) + '" height="' + h + '" rx="2"><title>' + X.fmtDate(x.k) + " (" + X.dayName(x.k) + "): " + money(x.v) + "</title></rect>"; }).join("") +
+        '<text x="5" y="' + (H + 16) + '">' + X.fmtDate(seq[0].k) + '</text><text x="' + (W - 5) + '" y="' + (H + 16) + '" text-anchor="end">' + X.fmtDate(seq[seq.length - 1].k) + '</text></svg>';
+      var best = seq.slice().sort(function (x, y) { return y.v - x.v; })[0];
+      $("dia-sub").textContent = "El día con más ingreso fue el " + X.fmtDate(best.k) + " (" + X.dayName(best.k) + "): " + money(best.v) + ". Pasa el cursor sobre una barra para ver cada día.";
+    } else { $("c-dia").innerHTML = '<p class="rule">Sin pedidos entregados en este periodo.</p>'; $("dia-sub").textContent = ""; }
+
+    /* lectura */
+    var L = [], cats = toItems(byCat), canales = toItems(byCanal), tallas = toItems(byTalla);
+    if (cats.length) L.push("<b>" + esc(cats[0].l) + "</b> dejó " + money(cats[0].v) + ", que es el " + X.pct(cats[0].v, ing) + " del ingreso" + (cats[1] ? "; le sigue " + esc(cats[1].l) + " con " + money(cats[1].v) + "." : "."));
+    if (canales.length) L.push("<b>" + esc(canales[0].l) + "</b> cerró " + canales[0].v + " de las " + ent.length + " entregas. " + (canales[0].l === "WhatsApp" ? "Instagram muestra y WhatsApp cierra." : ""));
+    if (tallas.length) L.push("La talla más pedida fue la <b>" + esc(tallas[0].l) + "</b> (" + tallas[0].v + " unidades).");
+    L.push("<b>" + preg + " de " + data.cli.length + "</b> clientes preguntaron el precio antes de decidir; por eso el precio va sobre la foto en el catálogo.");
+    var rep = stock.rows.filter(function (r) { return r.alerta === "Reponer"; });
+    if (rep.length) L.push("Hay <b>" + rep.length + " tallas en cero</b> para reponer: " + rep.map(function (r) { return esc(r.item.prenda) + " " + esc(r.item.talla); }).join(", ") + ".");
+    if (no.length) L.push(no.length === 1 ? "1 pedido no se entregó y no cuenta en el ingreso." : no.length + " pedidos no se entregaron y no cuentan en el ingreso.");
+    $("lectura").innerHTML = L.map(function (t) { return "<li>" + t + "</li>"; }).join("");
+
+    $("t-no").innerHTML = no.length ? '<table><thead><tr><th>ID</th><th>Fecha</th><th>Prenda</th><th>Talla</th><th class="r">Precio</th><th>Motivo</th></tr></thead><tbody>' + no.map(function (p) { return "<tr><td>" + esc(p.id) + "</td><td>" + X.fmtDate(p.fecha) + "</td><td>" + esc(p.prenda) + "</td><td>" + esc(p.talla) + '</td><td class="r">' + money(p.precio) + "</td><td>" + esc(p.estado) + "</td></tr>"; }).join("") + "</tbody></table>" : '<p class="rule">Todos los pedidos de este periodo se entregaron o están en espera.</p>';
+
+    /* calidad de datos */
+    var issues = [], ids = {}, cliIds = {}; data.cli.forEach(function (c) { cliIds[c.id] = 1; });
+    var estados = ["entregado", "pendiente", "cancelado", "no habia talla"];
+    data.ped.forEach(function (p) {
+      if (p.id) { if (ids[p.id]) issues.push("El pedido " + p.id + " está repetido."); ids[p.id] = 1; }
+      if (!p.fecha) issues.push("El pedido " + (p.id || "sin ID") + " tiene una fecha que no se entiende.");
+      if (!stock.map[X.key(p.prenda, p.talla)]) issues.push("El pedido " + (p.id || "sin ID") + " pide “" + p.prenda + " talla " + p.talla + "”, que no existe en el inventario (revisa que se escriba igual).");
+      if (p.cliente && !cliIds[p.cliente]) issues.push("El pedido " + (p.id || "sin ID") + " tiene el cliente " + p.cliente + ", que no está en la hoja Clientes.");
+      if (!p.cliente) issues.push("El pedido " + (p.id || "sin ID") + " no tiene ID de cliente.");
+      if (estados.indexOf(norm(p.estado)) < 0) issues.push("El pedido " + (p.id || "sin ID") + " tiene el estado “" + p.estado + "”, que no es Entregado, Pendiente, Cancelado ni No había talla.");
+    });
+    stock.rows.forEach(function (r) { if (r.disp < 0) issues.push("Hay más pedidos que unidades para " + r.item.prenda + " talla " + r.item.talla + " (disponibles: " + r.disp + ")."); });
+    $("calidad").innerHTML = issues.length ? '<div class="warn"><b>Revisa estos datos antes de confiar en los números:</b><ul style="margin:6px 0 0;padding-left:20px">' + issues.slice(0, 12).map(function (i) { return "<li>" + esc(i) + "</li>"; }).join("") + (issues.length > 12 ? "<li>… y " + (issues.length - 12) + " más.</li>" : "") + "</ul></div>" : '<div class="okmsg">Sin problemas detectados en ' + data.ped.length + " pedidos, " + data.cli.length + " clientes y " + data.inv.length + " referencias de inventario.</div>";
+  }
+
+  function renderInventario() {
+    var c = { Reponer: 0, Bajo: 0, Ok: 0 }; stock.rows.forEach(function (r) { c[r.alerta]++; });
+    $("inv-stats").innerHTML = ["Reponer", "Bajo", "Ok"].map(function (a) { return '<div class="stat"><b>' + c[a] + "</b><small>" + alerta(a) + "</small></div>"; }).join("") + '<div class="stat"><b>' + sum(stock.rows, function (r) { return Math.max(0, r.disp); }) + "</b><small>unidades disponibles</small></div>";
+    var order = { Reponer: 0, Bajo: 1, Ok: 2 };
+    var rows = stock.rows.slice().sort(function (a, b) { return order[a.alerta] - order[b.alerta] || a.item.prenda.localeCompare(b.item.prenda, "es") || X.tallaIdx(a.item.talla) - X.tallaIdx(b.item.talla); });
+    $("t-inv").innerHTML = '<table><thead><tr><th>Prenda</th><th>Talla</th><th class="r">Stock inicial</th><th class="r">Entregadas</th><th class="r">Pendientes</th><th class="r">Disponibles</th><th>Alerta</th><th>Sugerencia</th></tr></thead><tbody>' +
+      rows.map(function (r) { var sug = r.alerta === "Ok" ? "—" : "Pedir " + Math.max(2, r.ent); return "<tr><td>" + esc(r.item.prenda) + "</td><td>" + esc(r.item.talla) + '</td><td class="r">' + r.item.stock + '</td><td class="r">' + r.ent + '</td><td class="r">' + r.pen + '</td><td class="r"><b>' + r.disp + "</b></td><td>" + alerta(r.alerta) + "</td><td>" + sug + "</td></tr>"; }).join("") + "</tbody></table>";
+  }
+
+  function renderClientes(ps) {
+    var ent = ps.filter(X.entregado), byId = {}; data.cli.forEach(function (c) { byId[c.id] = c; });
+    var preg = data.cli.filter(function (c) { return norm(c.preguntoPrecio).indexOf("s") === 0; }).length;
+    var mujeres = data.cli.filter(function (c) { return norm(c.sexo) === "mujer"; }).length;
+    var edades = data.cli.filter(function (c) { return c.edad > 0; }).map(function (c) { return c.edad; });
+    $("cli-stats").innerHTML = '<div class="stat"><b>' + data.cli.length + "</b><small>personas hablaron con CABAX</small></div>" + '<div class="stat"><b>' + preg + " de " + data.cli.length + "</b><small>preguntaron el precio</small></div>" + '<div class="stat"><b>' + X.pct(mujeres, data.cli.length) + "</b><small>son mujeres</small></div>" + (edades.length ? '<div class="stat"><b>' + Math.min.apply(null, edades) + "–" + Math.max.apply(null, edades) + "</b><small>años, de menor a mayor</small></div>" : "");
+    var seg = {}; X.SEGMENTOS.map(function (s) { return s.nombre; }).concat(["Otros"]).forEach(function (n) { seg[n] = { n: 0, ped: 0, ing: 0, cats: {} }; });
+    data.cli.forEach(function (c) { seg[X.segmentoDe(c)].n++; });
+    ent.forEach(function (p) { var c = byId[p.cliente]; if (!c) return; var s = seg[X.segmentoDe(c)]; s.ped++; s.ing += p.precio; s.cats[p.categoria] = (s.cats[p.categoria] || 0) + 1; });
+    var rules = {}; X.SEGMENTOS.forEach(function (s) { rules[s.nombre] = s.regla; }); rules["Otros"] = "No cumple ninguna regla anterior.";
+    $("t-seg").innerHTML = '<table><thead><tr><th>Segmento</th><th>Regla</th><th class="r">Clientes</th><th class="r">Pedidos</th><th class="r">Ingresos</th><th class="r">Ticket</th><th>Pide más</th></tr></thead><tbody>' +
+      Object.keys(seg).filter(function (k) { return seg[k].n > 0 || k !== "Otros"; }).map(function (k) { var s = seg[k], top = Object.keys(s.cats).sort(function (a, b) { return s.cats[b] - s.cats[a]; })[0]; return "<tr><td><b>" + esc(k) + '</b></td><td class="rule">' + esc(rules[k]) + '</td><td class="r">' + s.n + '</td><td class="r">' + s.ped + '</td><td class="r">' + money(s.ing) + '</td><td class="r">' + (s.ped ? money(s.ing / s.ped) : "—") + "</td><td>" + (top ? esc(top) : "—") + "</td></tr>"; }).join("") + "</tbody></table>";
+    $("b-sexo").innerHTML = bars(toItems(countBy(data.cli, function (c) { return c.sexo || "Sin dato"; })));
+    var rango = countBy(data.cli.filter(function (c) { return c.edad > 0; }), function (c) { return c.edad <= 22 ? "16 a 22" : (c.edad <= 27 ? "23 a 27" : "28 o más"); });
+    $("b-edad").innerHTML = bars(toItems(rango, { sort: function (a, b) { return parseInt(a.l, 10) - parseInt(b.l, 10); }, noGold: true }));
+    $("b-frec").innerHTML = bars(toItems(countBy(data.cli, function (c) { return c.frecuencia || "Sin dato"; })));
+  }
+
+  function renderAll() { var ps = filtered(); renderResumen(ps); renderInventario(); renderClientes(ps); }
+
+  /* ---------- asistente de registro ---------- */
+  function field(t, k) { var m = t.match(new RegExp("^[\\s*_]*" + k + "[*_]*\\s*:\\s*(.+)$", "im")); return m ? m[1].replace(/\*/g, "").trim() : ""; }
+  function nextId(list, prefix, width) { var max = 0; list.forEach(function (x) { var m = String(x.id).match(/(\d+)$/); if (m && +m[1] > max) max = +m[1]; }); return prefix + String(max + 1).padStart(width, "0"); }
+  function tsv(rows) { return rows.map(function (r) { return r.join("\t"); }).join("\n"); }
+  var current = null;
+  $("prep").addEventListener("click", function () {
+    var t = $("msg").value, out = $("out"); if (!t.trim()) { out.innerHTML = '<div class="warn">Pega primero el mensaje del cliente.</div>'; return; }
+    var items = [], bad = [], re = /^[\s\-•*]+(.+?)\s*·\s*Talla\s+(.+?)\s*·\s*\$?\s*([\d.,]+)/gim, m;
+    while ((m = re.exec(t))) {
+      var prenda = m[1].trim(), talla = m[2].trim(), precio = X.toNum(m[3]), r = stock.rows.filter(function (x) { return X.key(x.item.prenda, x.item.talla) === X.key(prenda, talla); })[0];
+      if (!r) { bad.push("“" + prenda + " talla " + talla + "” no está en el inventario; escríbela igual que en la hoja."); items.push({ prenda: prenda, talla: talla, precio: precio, cat: "" }); continue; }
+      if (r.disp <= 0) bad.push(r.item.prenda + " talla " + r.item.talla + " ya no tiene unidades. Avísale al cliente antes de confirmar.");
+      if (r.item.precio !== precio) bad.push(r.item.prenda + ": el cliente vio " + money(precio) + " y hoy cuesta " + money(r.item.precio) + ". Se usa el precio que vio el cliente; confirma con él.");
+      items.push({ prenda: r.item.prenda, talla: r.item.talla, precio: precio, cat: r.item.categoria });
+    }
+    if (!items.length) { out.innerHTML = '<div class="warn">No encontré prendas. Cada línea debe verse así: “- Vestido negro línea dorada · Talla M · $89.000”.</div>'; return; }
+    current = { items: items, nombre: field(t, "Nombre"), edad: X.toNum(field(t, "Edad")), sexo: field(t, "Sexo"), frec: field(t, "Compra ropa"), nota: field(t, "Nota"), bad: bad };
+    drawOut();
+  });
+  function drawOut() {
+    var c = current, out = $("out"), hoy = X.today(), quien = $("quien").value, canal = $("canal").value;
+    var nuevo = ($("r-nuevo") ? $("r-nuevo").checked : true), idCli = nuevo ? nextId(data.cli, "C", 2) : (($("r-id") && $("r-id").value.trim().toUpperCase()) || "");
+    var base = data.ped.slice(), rowsP = [], nid = nextId(base, "V", 3);
+    c.items.forEach(function (it, i) { var id = i === 0 ? nid : (function () { var m = nid.match(/^(\D+)(\d+)$/); return m[1] + String(+m[2] + i).padStart(m[2].length, "0"); })(); rowsP.push([id, hoy, idCli || "(completa)", it.cat, it.prenda, it.talla, it.precio, canal, "Pendiente", quien]); });
+    var html = "";
+    if (c.bad.length) html += '<div class="warn"><b>Antes de pegar:</b><ul style="margin:6px 0 0;padding-left:20px">' + c.bad.map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + "</ul></div>";
+    html += '<div><p class="step">Cliente: ' + esc(c.nombre || "(sin nombre)") + (c.edad ? ", " + c.edad + " años" : "") + (c.sexo ? ", " + esc(c.sexo) : "") + (c.nota ? " · Nota: " + esc(c.nota) : "") + "</p>" +
+      '<div class="radio"><label><input type="radio" name="cli" id="r-nuevo"' + (nuevo ? " checked" : "") + '> Cliente nuevo (se crea ' + esc(nextId(data.cli, "C", 2)) + ')</label><label><input type="radio" name="cli" id="r-ex"' + (nuevo ? "" : " checked") + '> Ya es cliente, su ID es</label><input type="text" id="r-id" style="width:90px" placeholder="C05" value="' + (nuevo ? "" : esc(idCli)) + '" aria-label="ID del cliente existente"></div></div>';
+    html += '<div><p class="step">1. Pega estas filas en la hoja <b>Pedidos</b> (primera celda vacía de la columna A)</p><div class="paste" id="paste-p">' + esc(tsv(rowsP)) + '</div><p style="margin:8px 0 0"><button class="btn sm" type="button" data-copy="p">Copiar filas de Pedidos</button></p></div>';
+    var cliRow = [idCli || "(completa)", c.edad || "", c.sexo || "", canal, "", "", c.frec || ""];
+    if (nuevo) html += '<div><p class="step">2. Pega esta fila en la hoja <b>Clientes</b></p><div class="paste" id="paste-c">' + esc(tsv([cliRow])) + '</div><p class="rule" style="margin:6px 0 0">Las columnas “preguntó precio” y “preguntó talla o calidad” las llena el equipo según la conversación.</p><p style="margin:8px 0 0"><button class="btn sm" type="button" data-copy="c">Copiar fila de Clientes</button></p></div>' +
+      '<div><p class="step">3. Pega esta fila en la hoja <b>Directorio</b> (privada, no se publica)</p><div class="paste" id="paste-d">' + esc(tsv([[idCli, c.nombre, ""]])) + '</div><p style="margin:8px 0 0"><button class="btn sm" type="button" data-copy="d">Copiar fila de Directorio</button></p></div>';
+    out.innerHTML = html;
+    current.rows = { p: tsv(rowsP), c: tsv([cliRow]), d: tsv([[idCli, c.nombre, ""]]) };
+  }
+  $("out").addEventListener("change", function (e) { if (e.target.name === "cli") drawOut(); });
+  $("out").addEventListener("input", function (e) { if (e.target.id === "r-id") { $("r-ex").checked = true; var pos = e.target.selectionStart; drawOut(); var i = $("r-id"); i.focus(); try { i.setSelectionRange(pos, pos); } catch (x) {} } });
+  $("out").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-copy]"); if (!b || !current) return;
+    var txt = current.rows[b.dataset.copy], el = $("paste-" + b.dataset.copy);
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { toast("Copiado. Pégalo en la hoja con Ctrl + V."); }, function () { sel(el); });
+    else sel(el);
+    function sel(n) { var r = document.createRange(); r.selectNodeContents(n); var s = getSelection(); s.removeAllRanges(); s.addRange(r); toast("Selecciona y copia con Ctrl + C."); }
+  });
+  $("msg").addEventListener("input", function () { $("out").innerHTML = ""; current = null; });
+  $("canal").addEventListener("change", function () { if (current) drawOut(); });
+  $("quien").addEventListener("change", function () { if (current) drawOut(); });
+
+  /* ---------- carga ---------- */
+  function load() {
+    $("periodo").textContent = "Leyendo las hojas de Google…";
+    return X.loadData().then(function (d) {
+      data = d; stock = X.stockTable(d.inv, d.ped); loadedAt = new Date();
+      var av = d.avisos.slice(); if (d.modo === "demo" && !av.length) av.push("Estás viendo datos de demostración del primer ciclo. Conecta las hojas de Google en config.js para ver los datos reales.");
+      $("avisos").innerHTML = av.map(function (a) { return '<div class="banner' + (d.avisos.length ? " err" : "") + '" role="status">' + esc(a) + "</div>"; }).join("");
+      var f = d.ped.map(function (p) { return p.fecha; }).filter(Boolean).sort();
+      $("periodo").textContent = f.length ? "Pedidos del " + X.fmtDate(f[0]) + " al " + X.fmtDate(f[f.length - 1]) + " · " + d.ped.length + " registrados" : "Aún no hay pedidos registrados.";
+      $("foot").textContent = "Fuente: " + (d.modo === "demo" ? "datos de demostración" : "hojas de Google publicadas") + ". Última lectura: " + loadedAt.toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" }).replace(/\.$/, "") + ". Los cambios en la hoja tardan unos minutos en publicarse.";
+      renderAll();
+      if (current) drawOut();
+    });
+  }
+  $("quien").innerHTML = (X.CFG.EQUIPO || []).map(function (n) { return "<option>" + esc(n) + "</option>"; }).join("");
+  ["desde", "hasta"].forEach(function (id) { $(id).addEventListener("change", function () { if (data) renderAll(); }); });
+  $("limpiar").addEventListener("click", function () { $("desde").value = ""; $("hasta").value = ""; if (data) renderAll(); });
+  $("recargar").addEventListener("click", function () { load().then(function () { toast("Datos actualizados."); }); });
+  var h = (location.hash || "").slice(1); if (TABS.indexOf(h) >= 0) showTab(h);
+  load();
+})();
+</script>
+</body>
+</html>
