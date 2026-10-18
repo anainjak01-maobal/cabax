@@ -428,6 +428,7 @@ td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
     current.rows = { p: tsv(rowsP), c: tsv([cliRow]), d: tsv([[idCli, c.nombre, ""]]) };
   }
   $("out").addEventListener("click", function (e) {
+    if (e.target.id === "otro") { $("out").innerHTML = ""; $("msg").focus(); return; }
     if (e.target.id !== "reg-directo" || !current) return;
     var btn = e.target, nuevo = $("r-nuevo").checked, idc = ($("r-id").value || "").trim().toUpperCase();
     if (!nuevo && !idc) { $("reg-res").innerHTML = '<div class="warn">Escribe el ID del cliente existente (por ejemplo C05).</div>'; return; }
@@ -435,7 +436,12 @@ td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
     btn.disabled = true; btn.textContent = "Registrando…";
     X.registrar({ nombre: current.nombre, clienteID: nuevo ? "" : idc, edad: current.edad, sexo: current.sexo, frecuencia: current.frec, canal: $("canal").value, canalContacto: $("canal").value, registro: $("quien").value, usarPrecio: true,
       items: current.items.map(function (i) { return { prenda: i.prenda, talla: i.talla, precio: i.precio }; }) }).then(function (r) {
-      if (r.ok) { btn.textContent = "Registrado"; $("reg-res").innerHTML = '<div class="okmsg">Registrado: ' + esc(r.ids.join(", ")) + " · cliente " + esc(r.cliente) + (r.nuevo ? " (nuevo)" : "") + ". Pulsa “Actualizar datos” en unos minutos para verlo aquí.</div>"; }
+      if (r.ok) {
+        /* se limpia todo para que no se pueda enviar dos veces el mismo pedido */
+        current = null; $("msg").value = "";
+        $("out").innerHTML = '<div class="okmsg" role="status"><b>Pedido registrado:</b> ' + esc(r.ids.join(", ")) + " · cliente " + esc(r.cliente) + (r.nuevo ? " (nuevo)" : "") + '. Quedó como Pendiente en la hoja. Pulsa “Actualizar datos” en unos minutos para verlo en el tablero.</div><p style="margin:12px 0 0"><button class="btn ghost sm" type="button" id="otro">Registrar otro pedido</button></p>';
+        toast("Pedido " + r.ids.join(", ") + " registrado.");
+      }
       else { btn.disabled = false; btn.textContent = "Registrar en la hoja ahora"; $("reg-res").innerHTML = '<div class="warn">' + esc(r.error || "No se pudo registrar.") + " Usa los pasos manuales de abajo.</div>"; }
     });
   });
