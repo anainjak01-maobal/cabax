@@ -117,6 +117,14 @@
     }).catch(function () { return demo(["No se pudo leer la hoja de Google. Revisa que esté publicada en la web en formato CSV. Mientras tanto se muestran datos de demostración, NO los reales."]); });
   }
 
+  /* Envía el pedido al script de Google que lo anota en la hoja. Siempre resuelve: { ok, ids, ... } o { ok:false, red:true } si no hubo conexión. */
+  function registrar(payload) {
+    if (!CFG.REGISTRO) return Promise.resolve({ ok: false, sinConfig: true });
+    return fetch(CFG.REGISTRO, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.json(); })
+      .catch(function () { return { ok: false, red: true, error: "No hubo conexión con el registro." }; });
+  }
+
   /* Pedidos que reservan stock: entregados y pendientes. Cancelados y "No había talla" no. */
   function ocupa(p) { var e = norm(p.estado); return e === "entregado" || e === "pendiente"; }
   function entregado(p) { return norm(p.estado) === "entregado"; }
@@ -150,5 +158,5 @@
   ];
   function segmentoDe(c) { for (var i = 0; i < SEGMENTOS.length; i++) if (SEGMENTOS[i].test(c)) return SEGMENTOS[i].nombre; return "Otros"; }
 
-  w.CX = { norm: norm, esc: esc, money: money, toNum: toNum, pct: pct, sum: sum, today: today, parseDate: parseDate, fmtDate: fmtDate, dayName: dayName, parseCSV: parseCSV, loadData: loadData, ocupa: ocupa, entregado: entregado, key: key, stockTable: stockTable, tallaIdx: tallaIdx, SEGMENTOS: SEGMENTOS, segmentoDe: segmentoDe, CFG: CFG };
+  w.CX = { norm: norm, esc: esc, money: money, toNum: toNum, pct: pct, sum: sum, today: today, parseDate: parseDate, fmtDate: fmtDate, dayName: dayName, parseCSV: parseCSV, loadData: loadData, registrar: registrar, ocupa: ocupa, entregado: entregado, key: key, stockTable: stockTable, tallaIdx: tallaIdx, SEGMENTOS: SEGMENTOS, segmentoDe: segmentoDe, CFG: CFG };
 })(window);

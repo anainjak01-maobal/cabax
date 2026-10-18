@@ -15,6 +15,10 @@ window.CABAX_CONFIG = {
     clientes: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRniaKoG3zI0t2dldr0p5EOVA68iBPd5kb1CTOJvnaaSPqReVpi8NKLYvcNiX6uSym03tz-NjGzu_xU/pub?gid=771194098&single=true&output=csv"
   },
 
+  /* Registro automático de pedidos: dirección de la aplicación web de Apps Script (ver LEEME, paso 5).
+     Si queda vacío, el pedido solo se envía por WhatsApp y se registra a mano desde el tablero. */
+  REGISTRO: "https://script.google.com/macros/s/AKfycbys50jcNY7FeOlOACiiiQdH3lmmNYLyeuuQf5C84tp3s6OrokeAYbWIUbsEz7BODjA0MA/exec",
+
   /* Integrantes que registran pedidos (aparecen en el asistente de registro). */
   EQUIPO: ["Albert", "Britani", "Xairy", "Angelly", "Claudia"],
 

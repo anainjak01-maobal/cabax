@@ -205,8 +205,8 @@ dialog::backdrop { background: rgba(20,19,17,.55); }
   $("close").addEventListener("click", function () { $("bag").close(); });
   $("lines").addEventListener("click", function (e) { var r = e.target.closest("[data-rm]"); if (!r) return; bag.splice(+r.dataset.rm, 1); render(); if (!bag.length) $("bag").close(); });
 
-  function buildMsg() {
-    var f = $("fecha").value, nota = $("nota").value.trim(), L = ["🛍️ *Pedido CABAX*", "Nombre: " + $("nombre").value.trim()];
+  function buildMsg(ids) {
+    var f = $("fecha").value, nota = $("nota").value.trim(), L = ["🛍️ *Pedido CABAX*" + (ids && ids.length ? " " + ids.join(", ") : ""), "Nombre: " + $("nombre").value.trim()];
     if ($("edad").value) L.push("Edad: " + $("edad").value);
     if ($("sexo").value) L.push("Sexo: " + $("sexo").value);
     if ($("frec").value) L.push("Compra ropa: " + $("frec").value);
@@ -238,12 +238,29 @@ dialog::backdrop { background: rgba(20,19,17,.55); }
   }
   $("wa").addEventListener("click", function () {
     if (!validate()) return;
+    var btn = $("wa"); if (btn.disabled) return; btn.disabled = true;
+    function listo() { btn.disabled = false; }
     /* la ventana se abre ya (antes de leer el inventario) para que el navegador no la bloquee */
     var win = window.open("", "_blank");
-    recheck().then(function (msgs) {
-      if (msgs.length) { if (win) win.close(); toast("Ojo: " + msgs.join("; ") + ". Revisa tu pedido."); if (!bag.length) $("bag").close(); return; }
-      var url = "https://wa.me/" + (X.CFG.WHATSAPP || "").replace(/\D/g, "") + "?text=" + encodeURIComponent(buildMsg());
+    function abrirWA(ids) {
+      var url = "https://wa.me/" + (X.CFG.WHATSAPP || "").replace(/\D/g, "") + "?text=" + encodeURIComponent(buildMsg(ids));
       if (win) win.location.href = url; else window.location.href = url;
+    }
+    recheck().then(function (msgs) {
+      if (msgs.length) { if (win) win.close(); toast("Ojo: " + msgs.join("; ") + ". Revisa tu pedido."); if (!bag.length) $("bag").close(); listo(); return; }
+      if (!X.CFG.REGISTRO) { abrirWA(); listo(); return; }
+      X.registrar({ nombre: $("nombre").value.trim(), edad: $("edad").value, sexo: $("sexo").value, frecuencia: $("frec").value, canal: "WhatsApp", canalContacto: "Catálogo web", registro: "Web",
+        items: bag.map(function (b) { return { prenda: b.prenda, talla: b.talla, precio: b.precio }; }) }).then(function (r) {
+        listo();
+        if (r.ok) {
+          abrirWA(r.ids); var n = bag.length; bag = []; render(); $("bag").close();
+          toast("Pedido " + r.ids.join(", ") + " registrado. Envía el mensaje de WhatsApp para confirmarlo.");
+        } else if (r.agotado && r.agotado.length) {
+          if (win) win.close(); toast("Se agotó: " + r.agotado.join(", ") + ". Quítalo de tu pedido."); recheck();
+        } else {
+          abrirWA(); toast("No se pudo registrar solo. Envía el mensaje de WhatsApp: el equipo lo anota desde ahí.");
+        }
+      });
     });
   });
   $("copy").addEventListener("click", function () {
