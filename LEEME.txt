@@ -1,27 +1,64 @@
-CABAX · MVP web (catálogo + pedido + tablero)
-=============================================
+CABAX · MVP web (catálogo para clientes + tablero del equipo)
+=============================================================
+
+QUÉ COMPARTIR (lo más importante)
+  Clientes:  https://USUARIO.github.io/REPOSITORIO/            (catálogo: index.html)
+             Solo muestra prendas, tallas, precios y disponibilidad. No muestra métricas, clientes ni pedidos.
+  Equipo:    https://USUARIO.github.io/REPOSITORIO/tablero.html  (NO se comparte con clientes)
+             Pide una clave y solo entonces muestra el tablero.
 
 ARCHIVOS
-  index.html      Catálogo para clientes (precio, talla, calidad; pide por WhatsApp)
-  tablero.html    Tablero del equipo (resumen, inventario, clientes, registrar pedido)
-  config.js       ÚNICO archivo que se edita (WhatsApp y enlaces de las hojas)
+  index.html      Catálogo para clientes (pide por WhatsApp)
+  tablero.html    Tablero del equipo, protegido con clave (resumen, inventario, clientes, registrar pedido)
+  config.js       El archivo que se edita: WhatsApp y REGISTRO (dirección del script)
+  apps-script/Codigo.gs   Script de Google: entrega el catálogo, guarda pedidos y protege los datos (paso 6)
   cabax-datos.xlsx  Base de datos para importar a Google Sheets
   lib.js, cabax.css, demo-data.js, fotos/   No se tocan (fotos: aquí van las imágenes)
 
 PASO A PASO
 1. Google Sheets: Nuevo > Archivo > Importar > subir cabax-datos.xlsx > "Reemplazar hoja de cálculo".
-2. Publicar SOLO tres pestañas: Archivo > Compartir > Publicar en la web >
-   elegir la pestaña > formato CSV > Publicar. Repetir con Inventario, Pedidos y Clientes.
-   NUNCA publicar Directorio (tiene los nombres) ni Instrucciones.
-3. Copiar los tres enlaces en config.js (HOJAS) y el WhatsApp del negocio
-   (indicativo + número, sin + ni espacios; Colombia: 57XXXXXXXXXX).
+2. NO publicar nada en la web. Si ya publicaste alguna pestaña:
+   Archivo > Compartir > Publicar en la web > "Dejar de publicar" (Inventario, Pedidos, Clientes).
+   Directorio (tiene los nombres) e Instrucciones nunca se publican.
+3. En config.js, escribe el WhatsApp del negocio (indicativo + número, sin + ni espacios; Colombia: 57XXXXXXXXXX).
 4. GitHub: crear un repositorio PÚBLICO, subir todos los archivos (index.html en la raíz),
    Settings > Pages > Deploy from a branch > main / (root).
-5. Abrir https://USUARIO.github.io/REPOSITORIO/ (catálogo) y .../tablero.html (equipo).
+5. (Después del paso 6) Abrir la dirección del catálogo y comprobar que muestra las prendas.
 
-OJO
-- Sin enlaces en config.js el sitio muestra datos de DEMOSTRACIÓN (aparece un aviso).
-- Lo publicado como CSV es público: sin nombres ni teléfonos en Inventario, Pedidos ni Clientes.
-  El costo unitario del Inventario también queda visible; si no se quiere, vaciar esa columna.
-- Los pedidos, clientes, stock y textos de calidad son datos de ejemplo: reemplazarlos por los reales.
-- Cambios en la hoja se ven en el sitio en pocos minutos (Google actualiza el CSV publicado).
+6. SCRIPT DE GOOGLE (obligatorio: sin él el catálogo no carga y el tablero no abre)
+   a) En la hoja de Google: Extensiones > Apps Script. Borra el código que aparezca,
+      pega todo el contenido de apps-script/Codigo.gs y pulsa Guardar.
+   b) CAMBIA la clave en la línea que dice  var CLAVE = "cambia-esta-clave";
+      Pon una clave que solo conozca el equipo (ej. "Cabax2026-equipo"). Guarda de nuevo.
+   c) Implementar > Nueva implementación > engranaje > Aplicación web.
+      Ejecutar como: Yo.  Quién tiene acceso: Cualquier persona.  Implementar.
+   d) Autoriza: elige tu cuenta > Configuración avanzada > Ir a (proyecto) > Permitir.
+   e) Copia la URL que termina en /exec y pégala en config.js, en REGISTRO. Sube config.js a GitHub.
+
+   Qué hace:
+   - El catálogo lee solo prenda, talla, precio, calidad, foto y stock disponible. No lee costos,
+     clientes ni pedidos.
+   - El tablero pide los datos con la clave. Sin clave, no devuelve nada.
+   - Al pulsar "Enviar por WhatsApp", el pedido queda en la hoja Pedidos como Pendiente (con su ID;
+     si el cliente es nuevo, se agrega a Clientes). Si la prenda se agotó, no lo registra y avisa al cliente.
+   - Pedidos que llegan por chat o Instagram: tablero > Registrar un pedido > pegar el mensaje >
+     Preparar filas > "Registrar en la hoja ahora".
+
+   Si cambias Codigo.gs: Implementar > Administrar implementaciones > editar > Versión nueva > Implementar.
+   Si cambias la clave, también hay que hacer esa versión nueva; el equipo entra con la clave nueva.
+
+ACCESO AL TABLERO
+  - La clave es compartida por el equipo. Cada persona la escribe una vez en su navegador.
+  - Para salir: botón "Salir" del tablero (borra la clave guardada en ese navegador).
+  - Si alguien que no es del equipo llega a tablero.html, solo ve la pantalla de la clave.
+
+LÍMITES QUE CONVIENE SABER
+  - La clave es sencilla: sirve para que el público no vea los datos, no para una seguridad de banco.
+    Si se filtra, cámbiala en Codigo.gs y haz una versión nueva.
+  - Cualquiera puede enviar un pedido de prueba al script (el registro está abierto). Si llegan pedidos falsos,
+    se borran de la hoja Pedidos a mano.
+  - GitHub Pages es público: el código y config.js se pueden ver. Por eso la clave no va en config.js
+    (se valida en el script, en Google).
+  - Los pedidos, clientes, stock y textos de calidad de la hoja son datos de ejemplo: reemplázalos por los reales.
+  - Un mismo nombre escrito igual (ej. "María L.") se toma como el mismo cliente.
+  - Los cambios en la hoja se ven en el catálogo en el momento de abrir la página.

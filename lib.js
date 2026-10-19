@@ -97,6 +97,38 @@
     });
   }
 
+  /* Catálogo público: solo el inventario disponible, calculado por el script (sin costos, clientes ni pedidos). */
+  function loadCatalogo() {
+    var R = CFG.REGISTRO;
+    if (!R) return loadData();
+    var sep = R.indexOf("?") < 0 ? "?" : "&";
+    return fetch(R + sep + "catalogo=1&t=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("red"); return r.text(); })
+      .then(function (t) {
+        if (/^\s*\{/.test(t)) throw new Error("respuesta");
+        var a = toObjects("inventario", t);
+        return { inv: clean("inventario", a.rows), ped: [], cli: [], modo: "hojas", avisos: a.missing.length ? ["En el catálogo no encuentro la columna: " + a.missing.join(", ") + "."] : [] };
+      })
+      .catch(function () { return { inv: [], ped: [], cli: [], modo: "error", avisos: ["No se pudo cargar el catálogo en este momento. Intenta de nuevo en unos minutos."] }; });
+  }
+
+  /* Tablero del equipo: pide los datos al script con la clave. Rechaza con Error("clave") si la clave no es correcta. */
+  function loadEquipo(clave) {
+    var R = CFG.REGISTRO;
+    if (!R) return Promise.reject(new Error("sinregistro"));
+    var sep = R.indexOf("?") < 0 ? "?" : "&";
+    function get(h) {
+      return fetch(R + sep + "hoja=" + h + "&clave=" + encodeURIComponent(clave) + "&t=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { if (!r.ok) throw new Error("red"); return r.text(); })
+        .then(function (t) { if (/^\s*\{/.test(t)) throw new Error("clave"); return t; });
+    }
+    return Promise.all([get("inventario"), get("pedidos"), get("clientes")]).then(function (t) {
+      var a = toObjects("inventario", t[0]), b = toObjects("pedidos", t[1]), c = toObjects("clientes", t[2]), avisos = [];
+      [["Inventario", a], ["Pedidos", b], ["Clientes", c]].forEach(function (x) { if (x[1].missing.length) avisos.push("En la hoja " + x[0] + " no encuentro la columna: " + x[1].missing.join(", ") + "."); });
+      return { inv: clean("inventario", a.rows), ped: clean("pedidos", b.rows), cli: clean("clientes", c.rows), modo: "hojas", avisos: avisos };
+    });
+  }
+
   /* Modo automático: cada enlace se reconoce por los títulos de sus columnas. La hoja Directorio se ignora. */
   function detectKind(csv) {
     var h = (parseCSV(csv)[0] || []).map(norm).join("|");
@@ -158,5 +190,5 @@
   ];
   function segmentoDe(c) { for (var i = 0; i < SEGMENTOS.length; i++) if (SEGMENTOS[i].test(c)) return SEGMENTOS[i].nombre; return "Otros"; }
 
-  w.CX = { norm: norm, esc: esc, money: money, toNum: toNum, pct: pct, sum: sum, today: today, parseDate: parseDate, fmtDate: fmtDate, dayName: dayName, parseCSV: parseCSV, loadData: loadData, registrar: registrar, ocupa: ocupa, entregado: entregado, key: key, stockTable: stockTable, tallaIdx: tallaIdx, SEGMENTOS: SEGMENTOS, segmentoDe: segmentoDe, CFG: CFG };
+  w.CX = { loadCatalogo: loadCatalogo, loadEquipo: loadEquipo, norm: norm, esc: esc, money: money, toNum: toNum, pct: pct, sum: sum, today: today, parseDate: parseDate, fmtDate: fmtDate, dayName: dayName, parseCSV: parseCSV, loadData: loadData, registrar: registrar, ocupa: ocupa, entregado: entregado, key: key, stockTable: stockTable, tallaIdx: tallaIdx, SEGMENTOS: SEGMENTOS, segmentoDe: segmentoDe, CFG: CFG };
 })(window);

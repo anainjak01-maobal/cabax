@@ -7,17 +7,17 @@ window.CABAX_CONFIG = {
      Si queda vacío, el cliente elige a quién enviar el mensaje. */
   WHATSAPP: "573123686649",
 
-  /* Enlaces CSV de las hojas de Google (Archivo > Compartir > Publicar en la web > elegir la pestaña > CSV).
-     Si los tres quedan vacíos, el sitio muestra los datos de demostración. */
+  /* Enlaces CSV de las hojas. Ya NO se necesitan si REGISTRO está configurado: el script entrega el catálogo.
+     Déjalos vacíos y no publiques Inventario, Pedidos ni Clientes (ver LEEME). Solo sirven como respaldo sin script. */
   HOJAS: {
     inventario: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRniaKoG3zI0t2dldr0p5EOVA68iBPd5kb1CTOJvnaaSPqReVpi8NKLYvcNiX6uSym03tz-NjGzu_xU/pub?gid=1999356035&single=true&output=csv",
     pedidos: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRniaKoG3zI0t2dldr0p5EOVA68iBPd5kb1CTOJvnaaSPqReVpi8NKLYvcNiX6uSym03tz-NjGzu_xU/pub?gid=2069214571&single=true&output=csv",
     clientes: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRniaKoG3zI0t2dldr0p5EOVA68iBPd5kb1CTOJvnaaSPqReVpi8NKLYvcNiX6uSym03tz-NjGzu_xU/pub?gid=771194098&single=true&output=csv"
   },
 
-  /* Registro automático de pedidos: dirección de la aplicación web de Apps Script (ver LEEME, paso 5).
-     Si queda vacío, el pedido solo se envía por WhatsApp y se registra a mano desde el tablero. */
-  REGISTRO: "https://script.google.com/macros/s/AKfycbys50jcNY7FeOlOACiiiQdH3lmmNYLyeuuQf5C84tp3s6OrokeAYbWIUbsEz7BODjA0MA/exec",
+  /* OBLIGATORIO: dirección de la aplicación web de Apps Script (termina en /exec, ver LEEME, paso 6).
+     Sin esto el catálogo no carga para los clientes y el tablero pide la URL en lugar de los datos. */
+  REGISTRO: "https://script.google.com/macros/s/AKfycby2rR-Szq2Il15g65031ARDQTDVCCpaPKmL0OsARg-q2acuML2xVcG5lbdQgDKko_PtUA/exec",
 
   /* Integrantes que registran pedidos (aparecen en el asistente de registro). */
   EQUIPO: ["Albert", "Britani", "Xairy", "Angelly", "Claudia"],

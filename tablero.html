@@ -98,17 +98,39 @@ td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
   .ledger > div:last-child { grid-column: 1 / -1; border-left: 0; }
   .cols2, .cols3 { grid-template-columns: 1fr; gap: 26px; }
 }
+.salir { appearance: none; background: transparent; border: 1px solid #5a554c; color: #cfc9bd; border-radius: 6px; padding: 6px 10px; font: 600 13px var(--f-body); cursor: pointer; }
+.acceso { min-height: 70vh; display: grid; place-items: center; padding: 40px 20px; }
+.acceso-in { width: min(420px, 100%); display: grid; gap: 14px; }
+.acceso h1 { font-family: var(--f-display); font-weight: 500; font-size: 34px; margin: 0; color: var(--ink); }
+.acceso p { margin: 0; color: var(--muted); }
+.acc-form { display: grid; gap: 8px; margin-top: 6px; }
+.acc-form label { font-weight: 600; font-size: 14px; color: var(--ink); }
+.acc-form input { font: 16px var(--f-body); padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+.acc-form .btn { justify-self: start; margin-top: 6px; }
+.acc-msg { min-height: 1.4em; color: var(--bad) !important; font-size: 14.5px; }
 </style>
 </head>
 <body>
 <header class="top">
   <div class="wrap">
     <a class="brand" href="index.html" aria-label="CABAX, inicio"><span class="wordmark">CABAX</span><span class="slogan">Alta costura audaz, belleza atemporal</span></a>
-    <nav class="nav" aria-label="Principal"><a href="index.html">Catálogo</a><a href="tablero.html" aria-current="page">Tablero</a></nav>
+    <nav class="nav" aria-label="Principal"><a href="index.html">Catálogo</a><a href="tablero.html" aria-current="page">Tablero</a><button class="salir" id="salir" type="button" hidden>Salir</button></nav>
   </div>
 </header>
 
-<main class="wrap">
+<section class="acceso" id="acceso" aria-labelledby="acc-h">
+  <div class="acceso-in">
+    <h1 id="acc-h">Tablero del equipo</h1>
+    <p>Esta página no muestra cifras sin la clave del equipo. Escríbela para entrar; el navegador la recuerda en este dispositivo.</p>
+    <form id="acc-form" class="acc-form">
+      <label for="clave">Clave del equipo</label>
+      <input id="clave" type="password" autocomplete="current-password" required>
+      <button class="btn" type="submit" id="acc-btn">Entrar</button>
+    </form>
+    <p class="acc-msg" id="acc-msg" role="status"></p>
+  </div>
+</section>
+<main class="wrap" id="contenido" hidden>
   <div class="page-h">
     <div><h1>Tablero de ventas e inventario</h1><p id="periodo">Cargando datos…</p></div>
     <div class="tools">
@@ -459,9 +481,32 @@ td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
   $("quien").addEventListener("change", function () { if (current) drawOut(); });
 
   /* ---------- carga ---------- */
+  var clave = "";
+  try { clave = localStorage.getItem("cabax-clave") || ""; } catch (e) {}
+  function mostrarTablero() { $("acceso").hidden = true; $("contenido").hidden = false; $("salir").hidden = false; }
+  function pedirClave(msg) { $("acceso").hidden = false; $("contenido").hidden = true; $("salir").hidden = true; $("acc-msg").textContent = msg || ""; $("clave").focus(); }
+  function mensajeError(err) {
+    if (err && err.message === "clave") return "La clave no es correcta.";
+    if (err && err.message === "sinregistro") return "Falta conectar el script de registro (REGISTRO en config.js).";
+    return "No se pudo conectar con los datos. Revisa la conexión e intenta de nuevo.";
+  }
+  $("acc-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var c = $("clave").value.trim(); if (!c) { $("acc-msg").textContent = "Escribe la clave."; return; }
+    $("acc-btn").disabled = true; $("acc-msg").textContent = "Revisando la clave…";
+    clave = c;
+    load().then(function () {
+      try { localStorage.setItem("cabax-clave", c); } catch (err) {}
+      $("acc-btn").disabled = false; mostrarTablero();
+    }, function (err) {
+      $("acc-btn").disabled = false; clave = ""; pedirClave(mensajeError(err));
+    });
+  });
+  $("salir").addEventListener("click", function () { try { localStorage.removeItem("cabax-clave"); } catch (err) {} location.reload(); });
+
   function load() {
-    $("periodo").textContent = "Leyendo las hojas de Google…";
-    return X.loadData().then(function (d) {
+    $("periodo").textContent = "Leyendo los datos…";
+    return X.loadEquipo(clave).then(function (d) {
       data = d; stock = X.stockTable(d.inv, d.ped); loadedAt = new Date();
       var av = d.avisos.slice(); if (d.modo === "demo" && !av.length) av.push("Estás viendo datos de demostración del primer ciclo. Conecta las hojas de Google en config.js para ver los datos reales.");
       $("avisos").innerHTML = av.map(function (a) { return '<div class="banner' + (d.avisos.length ? " err" : "") + '" role="status">' + esc(a) + "</div>"; }).join("");
@@ -477,7 +522,8 @@ td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
   $("limpiar").addEventListener("click", function () { $("desde").value = ""; $("hasta").value = ""; if (data) renderAll(); });
   $("recargar").addEventListener("click", function () { load().then(function () { toast("Datos actualizados."); }); });
   var h = (location.hash || "").slice(1); if (TABS.indexOf(h) >= 0) showTab(h);
-  load();
+  if (clave) load().then(mostrarTablero, function (err) { pedirClave(mensajeError(err)); });
+  else pedirClave("");
 })();
 </script>
 </body>

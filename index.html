@@ -76,7 +76,7 @@ dialog::backdrop { background: rgba(20,19,17,.55); }
 <header class="top">
   <div class="wrap">
     <a class="brand" href="index.html" aria-label="CABAX, inicio"><span class="wordmark">CABAX</span><span class="slogan">Alta costura audaz, belleza atemporal</span></a>
-    <nav class="nav" aria-label="Principal"><a href="index.html" aria-current="page">Catálogo</a><a href="tablero.html">Tablero</a></nav>
+    <nav class="nav" aria-label="Principal"><a href="index.html" aria-current="page">Catálogo</a></nav>
   </div>
 </header>
 
@@ -224,7 +224,7 @@ dialog::backdrop { background: rgba(20,19,17,.55); }
   }
   /* Antes de enviar se vuelve a leer el inventario: si algo se agotó o cambió de precio, se avisa. */
   function recheck() {
-    return X.loadData().then(function (d) {
+    return X.loadCatalogo().then(function (d) {
       var s = X.stockTable(d.inv, d.ped), msgs = [];
       bag = bag.filter(function (b) {
         var r = s.rows.filter(function (x) { return X.key(x.item.prenda, x.item.talla) === b.key; })[0];
@@ -271,7 +271,7 @@ dialog::backdrop { background: rgba(20,19,17,.55); }
   });
 
   $("fecha").min = X.today(); $("fecha").value = X.today();
-  X.loadData().then(function (d) {
+  X.loadCatalogo().then(function (d) {
     data = d; stock = X.stockTable(d.inv, d.ped);
     var av = d.avisos.slice(); if (d.modo === "demo" && !av.length) av.push("Estás viendo datos de demostración. Conecta las hojas de Google en config.js para ver el inventario real.");
     $("avisos").innerHTML = av.map(function (a) { return '<div class="banner' + (d.avisos.length ? " err" : "") + '" role="status">' + esc(a) + "</div>"; }).join("");
