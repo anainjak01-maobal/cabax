@@ -5,7 +5,7 @@
 window.CABAX_CONFIG = {
   /* WhatsApp del negocio: indicativo del país + número, sin + ni espacios. Ejemplo: "573001234567".
      Si queda vacío, el cliente elige a quién enviar el mensaje. */
-  WHATSAPP: "573123686649",
+  WHATSAPP: "573011389596",
 
   /* Enlaces CSV de las hojas. Ya NO se necesitan si REGISTRO está configurado: el script entrega el catálogo.
      Déjalos vacíos y no publiques Inventario, Pedidos ni Clientes (ver LEEME). Solo sirven como respaldo sin script. */
